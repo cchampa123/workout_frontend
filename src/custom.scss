@@ -1,0 +1,28 @@
+$body-bg: #D0B49F;
+$body-color: #523A28;
+$headings-color: #523A28;
+$headings-font-weight: 700;
+$nav-pills-link-active-bg:#A47551;
+
+$theme-colors: (
+  "primary": #D0B49F,
+  "secondary": #A47551,
+  "light": #E4D4C8,
+  "dark": #523A28,
+  "grey": #CED4DA,
+  "info": #FFFFFF,
+  "success": #c0facd,
+  "danger": #FFCCCB,
+  "black": #000000,
+  "red":#dc3545
+);
+
+// $primary: #D0B49F;
+// $secondary: #A47551;
+// $light: #E4D4C8;
+// $dark: #523A28;
+// $grey: #CED4DA;
+// $info: #FFFFFF;
+// $success: #c0facd;
+
+@import '~bootstrap/scss/bootstrap'

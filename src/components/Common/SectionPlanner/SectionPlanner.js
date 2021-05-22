@@ -1,0 +1,65 @@
+import React from 'react'
+import Card from 'react-bootstrap/card'
+import SectionDetail from './SectionDetail'
+import Button from 'react-bootstrap/button'
+import MovementItem from 'components/Common/MovementPlanner/MovementItem'
+import Row from 'react-bootstrap/row'
+import Col from 'react-bootstrap/col'
+
+import { section_type } from 'constants/section'
+import { createNewDefaultMovement } from 'utils/createDefaults'
+
+import {
+  id as movement_id,
+  section_id as movement_section_id
+} from 'constants/movement'
+
+import {
+  id as section_section_id,
+  user as section_user_id,
+} from 'constants/section'
+
+function SectionPlanner(props) {
+
+  return(
+    <Card className='my-1 bg-light'>
+        <Row className='m-1'>
+          <SectionDetail
+            sectionData={props.sectionData}
+            setSectionData={props.setSectionData}
+          />
+        </Row>
+        {
+          props.movementData.filter(
+            x=>x[movement_section_id]===props.sectionData[section_section_id]
+          ).map(movement =>
+            <MovementItem
+              key={movement[movement_id]}
+              movement={movement}
+              setMovementData={props.setMovementData}
+              sectionType={props.sectionData[section_type]}
+            />
+          )
+        }
+        <Row className='m-1'>
+          <Col>
+            <Button
+              className='btn btn-dark col-12'
+              onClick={()=>props.setMovementData(
+                createNewDefaultMovement(
+                  props.sectionData[section_user_id],
+                  props.workoutId,
+                  props.sectionData[section_section_id],
+                  props.movementData
+                )
+              )}
+            >
+              Add New Movement
+            </Button>
+          </Col>
+        </Row>
+    </Card>
+  )
+}
+
+export default SectionPlanner
