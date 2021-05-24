@@ -12,7 +12,7 @@ import {
 
 function SubmissionConfirmation(props) {
 
-  const { page, setPage } = useContext(PageContext)
+  const { setPage } = useContext(PageContext)
 
   return (
     <Modal

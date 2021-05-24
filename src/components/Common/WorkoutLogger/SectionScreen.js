@@ -1,7 +1,7 @@
 import React from 'react'
 import Card from 'react-bootstrap/Card'
-import { createSectionDetail, formatDataStrings, movementFormatting } from 'utils/sectionStringFormatting'
-import { section_type, extra_instructions } from 'constants/section'
+import { movementFormatting } from 'utils/sectionStringFormatting'
+import { extra_instructions } from 'constants/section'
 import { id } from 'constants/movement'
 import SectionDetail from 'components/Common/SectionPlanner/SectionDetail'
 

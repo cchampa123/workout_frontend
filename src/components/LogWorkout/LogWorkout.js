@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react'
-import Button from 'react-bootstrap/button'
 import { WorkoutDataContext } from 'contexts/WorkoutDataContext'
 import WorkoutSummary from 'components/Common/WorkoutSummary/WorkoutSummary'
 import WorkoutLogger from 'components/Common/WorkoutLogger/WorkoutLogger'
@@ -9,9 +8,6 @@ import {
 import {
   workout_id as section_workout_id
 } from 'constants/section'
-import {
-  workout_id as movement_workout_id
-} from 'constants/movement'
 
 function LogWorkout() {
 

@@ -8,7 +8,7 @@ import { MovementClassContext } from 'contexts/MovementClassContext'
 
 import { createNewDefaultSection } from 'utils/createDefaults'
 
-import { section_id as movement_section_id, id as movement_movement_id, movement_id as movement_class_name } from 'constants/movement'
+import { id as movement_movement_id, movement_id as movement_class_name } from 'constants/movement'
 import { id as section_section_id } from 'constants/section'
 import { id as workout_workout_id, user as workout_user_id, date as planned_date } from 'constants/workout'
 import { movement_class_data } from 'constants/.data'

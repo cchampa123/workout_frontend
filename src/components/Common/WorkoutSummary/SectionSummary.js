@@ -1,7 +1,6 @@
 import React from 'react'
-import { formatDataStrings, sectionTitling, movementFormatting } from 'utils/sectionStringFormatting'
+import { sectionTitling, movementFormatting } from 'utils/sectionStringFormatting'
 import {
-  movement_id as movement_class_id,
   id as movement_instance_id
 } from 'constants/movement'
 
