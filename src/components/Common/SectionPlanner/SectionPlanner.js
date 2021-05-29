@@ -15,8 +15,7 @@ import {
 } from 'constants/movement'
 
 import {
-  id as section_section_id,
-  user as section_user_id,
+  id as section_section_id
 } from 'constants/section'
 
 function SectionPlanner(props) {
@@ -30,7 +29,7 @@ function SectionPlanner(props) {
           />
         </Row>
         {
-          props.movementData.filter(
+          props.movementData.filter(movement=>movement!==null).filter(
             x=>x[movement_section_id]===props.sectionData[section_section_id]
           ).map(movement =>
             <MovementItem
@@ -47,7 +46,6 @@ function SectionPlanner(props) {
               className='btn btn-dark col-12'
               onClick={()=>props.setMovementData(
                 createNewDefaultMovement(
-                  props.sectionData[section_user_id],
                   props.workoutId,
                   props.sectionData[section_section_id],
                   props.movementData

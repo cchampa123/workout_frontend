@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import Modal from 'react-bootstrap/modal'
 import Form from 'react-bootstrap/form'
 import Button from 'react-bootstrap/button'
+import { AuthContext } from 'contexts/AuthContext'
+import { addNewMovementClass } from 'utils/apiCalls'
 
 import {
   name,
@@ -15,6 +17,8 @@ function MovementClassAdder(props) {
 
   const [form, setForm] = useState(props.newMovement[0])
   const [error, setError] = useState({})
+
+  const {token} = useContext(AuthContext)
 
   const updateForm = (field, value) => {
     setForm({
@@ -37,15 +41,16 @@ function MovementClassAdder(props) {
     return newErrors
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const errors = checkErrors()
     if (Object.keys(errors).length>0) {
       setError(errors)
     } else {
       setError(errors)
       const { customOption, ...rest } = form
-      props.setMovementClassData([rest].concat(props.movementClassData))
-      props.updateMovement([rest])
+      const newMovement = await addNewMovementClass(token, rest)
+      props.setMovementClassData([newMovement].concat(props.movementClassData))
+      props.updateMovement([newMovement])
       props.setNewMovement({})
     }
   }

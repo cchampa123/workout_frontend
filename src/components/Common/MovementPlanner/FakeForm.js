@@ -7,7 +7,7 @@ function FakeForm(props) {
   let word
   let number
 
-  if(props.movementData[props.relevant_number_variable]!=='') {
+  if(props.movementData[props.relevant_number_variable]!==null) {
     if (props.movementData[props.relevant_type_variable] === 'time') {
       if(props.movementData[props.relevant_number_variable]==='00:00:00') {
         word=props.movementClass[props.relevant_defaults][0]
@@ -16,9 +16,9 @@ function FakeForm(props) {
         word = ''
         const [hours, minutes, seconds] = props.movementData[props.relevant_number_variable].split(':')
         if (hours==='00') {
-          number = String(Number(minutes))+':'+seconds
+          number = Number(minutes).toString()+':'+seconds
         } else {
-          number = String(Number(hours))+':'+minutes+':'+seconds
+          number = Number(hours).toString()+':'+minutes+':'+seconds
         }
       }
     } else {

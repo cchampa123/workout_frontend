@@ -1,33 +1,19 @@
-// export function setSectionDataWrapper(newSection, id=null) {
-//   let newSectionData
-//   const relevantID = id!==null?id:newSection.id
-//   const otherSections = sectionData.filter(x=>x.id!==relevantID)
-//   if (newSection !== null) {
-//     newSectionData=[...otherSections, newSection]
-//   } else {
-//     newSectionData=[...otherSections]
-//     const newMovementData=movementData.filter(x=>x[movement_section_id]!==id)
-//     setMovementData(newMovementData)
-//   }
-//   setSectionData(newSectionData)
-// }
-//
-// export function setMovementDataWrapper(newMovement, id=null) {
-//   const newMovementData = []
-//   const relevantID = id!==null?id:newMovement.id
-//   if (movementData.map(x=>x[movement_movement_id]).includes(relevantID)) {
-//     for (const movement of movementData) {
-//       if (movement[movement_movement_id]===relevantID) {
-//         if (newMovement !== null) {
-//           newMovementData.push(newMovement)
-//         }
-//       } else {
-//         newMovementData.push(movement)
-//       }
-//     }
-//   } else {
-//     newMovementData.push(...movementData, newMovement)
-//   }
-//   newMovementData.sort((a,b)=>a['superset']>b['superset']?1:-1)
-//   setMovementData(newMovementData)
-// }
+import { useState, useEffect, useCallback } from "react";
+import { set, get } from "idb-keyval";
+
+export function usePersistedState(keyToPersistWith, defaultState) {
+    const [state, setState] = useState(defaultState);
+
+    useEffect(() => {
+        get(keyToPersistWith).then(retrievedState =>
+            // If a value is retrieved then use it; otherwise default to defaultValue
+            setState(retrievedState ?? defaultState));
+    }, [keyToPersistWith, setState, defaultState]);
+
+    const setPersistedValue = useCallback((newValue) => {
+        setState(newValue);
+        set(keyToPersistWith, newValue);
+    }, [keyToPersistWith, setState]);
+
+    return [state, setPersistedValue];
+}

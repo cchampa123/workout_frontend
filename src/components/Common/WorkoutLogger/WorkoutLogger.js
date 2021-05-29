@@ -1,48 +1,42 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import Button from 'react-bootstrap/button'
-import Modal from 'react-bootstrap/modal'
 import SectionScreen from './SectionScreen'
 import Form from 'react-bootstrap/form'
 import MovementLogForm from './MovementLogForm'
-import { PageContext } from 'contexts/PageContext'
 import {
-  id as section_section_id,
-  workout_id as section_workout_id
+  id as section_section_id
 } from 'constants/section'
 import {
   section_id as movement_section_id,
-  workout_id as movement_workout_id,
   score_number,
   score_type,
   id as movement_movement_id,
   count as movement_count
 } from 'constants/movement'
 import {
-  id as workout_workout_id
+  complete as workout_complete
 } from 'constants/workout'
+import {
+  workoutLoggerUnfinishedMovements,
+  workoutLoggerNetworkError,
+  workoutLoggerSubmissionSuccess
+} from 'constants/strings'
+import SubmissionConfirmation from 'components/Common/SubmissionConfirmation'
 
 function WorkoutLogger(props) {
 
-  const { setPage } = useContext(PageContext)
-
-  const [workoutData, setWorkoutData] = useState(props.workoutData['workouts'].filter(workout=>
-    workout[workout_workout_id]===props.activeWorkout
-  )[0])
-  const [sectionData, setSectionData] = useState(props.workoutData['sections'].filter(section=>
-    section[section_workout_id]===props.activeWorkout
-  ))
-  const [movementData, setMovementData] = useState(props.workoutData['movements'].filter(movement=>
-    movement[movement_workout_id]===props.activeWorkout
-  ))
+  const [sectionData, setSectionData] = useState(props.workoutData['sections'])
+  const [movementData, setMovementData] = useState(props.workoutData['movements'])
 
   const [activeSection, setActiveSection] = useState(0)
-  const [show, setShow] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
 
   const checkErrors = () => {
     const newErrors={}
     for (const movement of movementData) {
-      if (movement[movement_count]===''){
+      if (movement[movement_count]===null){
         newErrors[movement[movement_movement_id]] = 'Missing'
       }
       if (movement[score_number]===''&&movement[score_type]!=='time') {
@@ -56,25 +50,36 @@ function WorkoutLogger(props) {
     const newSection = activeSection + 1
     if (newSection === sectionData.length) {
       setErrors(checkErrors())
-      setShow(true)
+      handleSubmit()
     } else {
       setActiveSection(newSection)
     }
   }
 
-  const handleSubmit = () => {
-    if (Object.keys(errors).length>0) {
-      setShow(false)
-    } else {
-      props.setWorkoutData({
-        'workouts':{...workoutData, complete:true},
+  const handleSubmit = async () => {
+    setLoading(true)
+    const newErrors = checkErrors()
+    if (Object.keys(newErrors).length===0){
+      setErrors(newErrors)
+      const newWorkoutData = {
+        'workouts':[{...props.workoutData['workouts'], [workout_complete]:true}],
         'sections':sectionData,
         'movements':movementData
+      }
+      setSubmitted(true)
+      props.setWorkoutData(newWorkoutData).then(res => {
+        if (res.length > 0) {
+          setErrors({submissionErrors:res})
+        }
+        setLoading(false)
       })
-      setShow(false)
-      setPage('Home')
+    } else {
+      setErrors(newErrors)
+      setSubmitted(true)
+      setLoading(false)
     }
   }
+
 
   function setSectionDataWrapper(newSection, id=null) {
     const newSectionData = []
@@ -95,7 +100,6 @@ function WorkoutLogger(props) {
     setSectionData(newSectionData)
   }
 
-
   function setMovementDataWrapper(newMovement, id=null) {
     const newMovementData = []
     const relevantID = id!==null?id:newMovement.id
@@ -115,6 +119,8 @@ function WorkoutLogger(props) {
     newMovementData.sort((a,b)=>a['superset']>b['superset']?1:(a['superset']===b['superset']?0:-1))
     setMovementData(newMovementData)
   }
+
+  const errorString = !!errors.submissionErrors ? workoutLoggerNetworkError : workoutLoggerUnfinishedMovements
 
   return(
     <div>
@@ -147,31 +153,14 @@ function WorkoutLogger(props) {
           Back to Previous Section
         </Button>
       }
-      <Modal
-        show={show}
-        onHide={()=>setShow(false)}
-      >
-        <Modal.Header className='bg-dark text-white'>
-          <strong className='text-center col-12'>
-          {
-            Object.keys(errors).length>0?"Errors detected":"Workout Submitted"
-          }
-          </strong>
-        </Modal.Header>
-        <Modal.Body>
-          {
-            Object.keys(errors).length>0?"Looks like you forgot to fill out some movements.":"Nice work! All set."
-          }
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            onClick={()=>handleSubmit()}
-            className={Object.keys(errors).length>0?'col-12 btn-danger':'col-12 btn-success'}
-          >
-            OK
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <SubmissionConfirmation
+        submitted={submitted}
+        successString={workoutLoggerSubmissionSuccess}
+        errorString={errorString}
+        error={Object.keys(errors).length>0}
+        loading={loading}
+        setSubmitted={setSubmitted}
+      />
     </div>
   )
 }

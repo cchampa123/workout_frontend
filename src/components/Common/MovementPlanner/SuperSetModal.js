@@ -39,8 +39,6 @@ function SuperSetModal(props) {
       <Modal
         show={show}
         onHide={handleClose}
-        aria-labelledby='contained-modal-title-vcenter'
-        centered
       >
         <Modal.Header>
           <strong className='text-center col-12'>

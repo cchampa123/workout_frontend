@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useContext } from 'react'
 import Button from 'react-bootstrap/button'
+import { PageContext } from 'contexts/PageContext'
 import DateCard from './DateCard'
-import SubmissionConfirmation from './SubmissionConfirmation'
+import SubmissionConfirmation from 'components/Common/SubmissionConfirmation'
 import SectionPlanner from 'components/Common/SectionPlanner/SectionPlanner'
 
 import { MovementClassContext } from 'contexts/MovementClassContext'
@@ -10,23 +11,27 @@ import { createNewDefaultSection } from 'utils/createDefaults'
 
 import { id as movement_movement_id, movement_id as movement_class_name } from 'constants/movement'
 import { id as section_section_id } from 'constants/section'
-import { id as workout_workout_id, user as workout_user_id, date as planned_date } from 'constants/workout'
-import { movement_class_data } from 'constants/.data'
+import { id as workout_workout_id, date as planned_date, complete as workout_complete } from 'constants/workout'
+
+import {
+  workoutPlannerSubmissionSuccess,
+  workoutPlannerSubmissionFailureNoMovements,
+  workoutPlannerSubmissionFailureEmptyMovements
+} from 'constants/strings'
 
 function WorkoutPlanner(props) {
+
+  const {setPage} = useContext(PageContext)
 
   const [sectionData, setSectionData] = useState(props.sections)
   const [movementData, setMovementData] = useState(props.movements)
   const [workoutData, setWorkoutData] = useState(props.workout)
   const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
-  //const [workout, setWorkout] = useState(props.workout)
 
   //TODO: turn class data into live API call
   const [movementClassData, setMovementClassData] = useState([])
-  useEffect(() => {
-    setMovementClassData(movement_class_data)
-  }, [])
   const value = { movementClassData, setMovementClassData }
 
   const checkErrors = () => {
@@ -44,20 +49,25 @@ function WorkoutPlanner(props) {
     return newErrors
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    setLoading(true)
     const newErrors = checkErrors()
     if (Object.keys(newErrors).length===0){
       setErrors(newErrors)
       const newWorkoutData = {
-        'workouts':[...props.workoutData['workouts'], workoutData],
-        'sections':[...props.workoutData['sections'], ...sectionData],
-        'movements':[...props.workoutData['movements'], ...movementData]
+        'workouts':[{...workoutData, [workout_complete]:!!props.finishWorkout?true:workoutData[workout_complete]}],
+        'sections':sectionData,
+        'movements':movementData
       }
-      props.setWorkoutData(newWorkoutData)
       setSubmitted(true)
+      props.setWorkoutData(newWorkoutData).then(res => {
+        setErrors(res)
+        setLoading(false)
+      })
     } else {
       setErrors(newErrors)
       setSubmitted(true)
+      setLoading(false)
     }
 
   }
@@ -101,6 +111,25 @@ function WorkoutPlanner(props) {
     setMovementData(newMovementData)
   }
 
+  const successFooter = () => {
+    return (
+      <Button
+        className='btn-success col-12'
+        onClick={()=>setPage({pageTitle:'Home', pageProps:{}})}
+      >
+        OK
+      </Button>
+    )
+  }
+
+  const errorMessage = () => {
+    if (errors['noMovements']) {
+      return (workoutPlannerSubmissionFailureNoMovements)
+    } else {
+      return (workoutPlannerSubmissionFailureEmptyMovements)
+    }
+  }
+
   return(
     <MovementClassContext.Provider value={value}>
       <DateCard
@@ -125,7 +154,6 @@ function WorkoutPlanner(props) {
         onClick={()=>setSectionData([
           ...sectionData,
           createNewDefaultSection(
-            workoutData[workout_user_id],
             workoutData[workout_workout_id],
             sectionData
           )
@@ -137,11 +165,15 @@ function WorkoutPlanner(props) {
         className='col-12 btn btn-secondary mt-2'
         onClick={handleSubmit}
       >
-        Submit
+        {!!props.finishWorkout?'Complete Workout':'Submit'}
       </Button>
       <SubmissionConfirmation
         submitted={submitted}
-        errors={errors}
+        successFooter={successFooter()}
+        errorString={errorMessage()}
+        successString={workoutPlannerSubmissionSuccess}
+        error={Object.keys(errors).length>0}
+        loading={loading}
         setSubmitted={setSubmitted}
       />
     </MovementClassContext.Provider>

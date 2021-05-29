@@ -25,7 +25,7 @@ function MovementLogForm(props) {
     if (relevantScore===count) {
       return props.movementData[score_time]==='00:00:00'?'Untimed':props.movementData[score_time]
     } else {
-      return props.movementData[count]===''?'? Reps':props.movementData[count]+' Reps'
+      return props.movementData[count]===null?'? Reps':props.movementData[count]
     }
   }
 

@@ -55,14 +55,14 @@ function SectionDetail(props) {
   }
 
   const setField = (field, value) => {
-    if (field === round_type && value==='fortime') {
+    if (field === round_type && value==='F') {
       setForm({
         ...form,
         round_type:value,
         'round_duration_minutes':'',
         'round_duration_seconds':''
       })
-    } else if (field === section_type && value==='strength') {
+    } else if (field === section_type && value==='S') {
       setForm({
         ...form,
         section_type:value,
@@ -71,7 +71,7 @@ function SectionDetail(props) {
         rounds:'',
         round_type:''
       })
-    } else if (form[section_type]==='strength' && field===section_type && value!=='strength') {
+    } else if (form[section_type]==='S' && field===section_type && value!=='S') {
       setForm({
         ...form,
         section_type:value,
@@ -143,7 +143,7 @@ function SectionDetail(props) {
               }
             </Form.Control>
           </Form.Group>
-          {form[section_type]!=='strength' ?
+          {form[section_type]!=='S' ?
           <div>
             <Form.Group>
               <Form.Label>Rounds</Form.Label>
@@ -172,7 +172,7 @@ function SectionDetail(props) {
                 }
               </Form.Control>
             </Form.Group>
-            {form[round_type]==='fortime'?<div/>:
+            {form[round_type]==='F'?<div/>:
             <div>
               <Form.Label>Round Duration</Form.Label>
               <Row>

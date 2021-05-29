@@ -1,36 +1,53 @@
 import React, {useState} from 'react';
 import Container from 'react-bootstrap/container'
+import Row from 'react-bootstrap/row'
 import Form from 'react-bootstrap/form'
 import Button from 'react-bootstrap/button'
+import Spinner from 'react-bootstrap/spinner'
 import image from '../img/open_logo.png'
+import axios from 'axios'
+import { API_URL } from 'constants/configs'
 
 function UnauthenticatedApp(props) {
 
-  const [username, setUsername] = useState("")
+  const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
 
-  function submitCreds() {
-    props.setUser({"username":username, "password":password})
+  async function submitCreds() {
+    setLoading(true)
+    let response
+    try {
+      response = await axios.post(API_URL+'login/', {
+        email:email,
+        password:password
+      })
+      props.setUser(response.data)
+    }
+    catch (error) {
+      setError(error.response.data)
+      setLoading(false)
+    }
   }
 
-  return (
-    <Container>
-      <br/>
-      <img src={image} className='mx-auto d-block img-fluid' alt="WhoopiePie Logo"/>
-      <br/>
-      <h1 style={{textAlign: "center", fontWeight:"bold"}}>WhoopiePie</h1>
-      <br/>
-      <Form>
+  const loginForm = (
+    <Form>
+      <Row className='my-2'>
         <Form.Group>
           <Form.Control
-            placeholder='Username'
+            placeholder='Email'
+            type='email'
             style={{textAlign: "center",
                     fontWeight: "bold"}}
-            value={username}
-            onChange={e => setUsername(e.target.value)}
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            isInvalid={!!error.email}
           />
+          <Form.Control.Feedback type='invalid'>{error.email}</Form.Control.Feedback>
         </Form.Group>
-        <br/>
+      </Row>
+      <Row className='my-2'>
         <Form.Group>
           <Form.Control
             placeholder='Password'
@@ -39,17 +56,37 @@ function UnauthenticatedApp(props) {
                     fontWeight: "bold"}}
             value={password}
             onChange={e => setPassword(e.target.value)}
+            isInvalid={!!error.password}
           />
+          <Form.Control.Feedback type='invalid'>{error.password}</Form.Control.Feedback>
         </Form.Group>
-        <br/>
-        <Button
-          className='btn btn-dark col-12'
-          style={{fontWeight:"bold"}}
-          onClick={() => submitCreds()}
-        >
-          Log In
-        </Button>
-      </Form>
+      </Row>
+      <Row className='my-2'>
+        <Form.Group>
+          <Button
+            className='btn btn-dark col-12'
+            style={{fontWeight:"bold"}}
+            onClick={() => submitCreds()}
+          >
+            Log In
+          </Button>
+        </Form.Group>
+      </Row>
+      {error.non_field_errors ?
+        <h5 className='text-red text-center'>{error.non_field_errors}</h5>:
+        <div/>
+      }
+    </Form>
+  )
+
+  return (
+    <Container>
+      <br/>
+      <img src={image} className='mx-auto d-block img-fluid' alt="WhoopiePie Logo"/>
+      <br/>
+      <h1 style={{textAlign: "center", fontWeight:"bold"}}>WhoopiePie</h1>
+      <br/>
+      {loading ? <div className='text-center'><Spinner animation='border'/></div> : loginForm}
     </Container>
   );
 }

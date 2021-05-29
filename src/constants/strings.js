@@ -4,3 +4,6 @@ export const workoutPlannerSubmissionFailure = 'Looks like there are a couple th
 export const workoutPlannerSubmissionFailureEmptyMovements = 'Please select a movement type for each of the entries in this workout - they cannot be blank.'
 export const workoutPlannerSubmissionFailureNoMovements = "Please make sure you entered a movement for each section. If you really don't want any movements in a section, just delete that whole section."
 export const workoutPlannerSubmissionFailureNoSections = 'Please make sure you created at least one section for this workout.'
+export const workoutLoggerUnfinishedMovements = 'Please make sure you recorded a score for every movement.'
+export const workoutLoggerNetworkError = 'Something went wrong with the submission process. The app will try again in the background.'
+export const workoutLoggerSubmissionSuccess = 'Nice work.'

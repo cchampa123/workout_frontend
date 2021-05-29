@@ -15,11 +15,11 @@ import {
 } from 'constants/movement'
 
 const mapping = {
-  'amrap':'AMRAP',
-  'fortime': 'For Time',
-  'emom':'EMOM',
-  'strength':'Strength',
-  'metcon':'MetCon',
+  'A':'AMRAP',
+  'F': 'For Time',
+  'E':'EMOM',
+  'S':'Strength',
+  'M':'MetCon',
   'reps':'Reps',
   'miles':'Miles',
   'meters':'Meters',
@@ -53,7 +53,7 @@ export function createSectionDetail(sectionData) {
     sectionData[round_duration].lastIndexOf(':')+1,
     sectionData[round_duration].length
   )
-  if (sectionData[round_type]==='amrap') {
+  if (sectionData[round_type]==='A') {
     if (sectionData[round_duration].split(':')[2]!=='00') {
       sectionDetail=sectionData[rounds] +
         (Number(sectionData[rounds])===1?' round ':' rounds ')+
@@ -67,7 +67,7 @@ export function createSectionDetail(sectionData) {
         human_minutes +
         ' minute AMRAP'
     }
-  } else if (sectionData[round_type]==='fortime') {
+  } else if (sectionData[round_type]==='F') {
       sectionDetail=sectionData[rounds] +
       (Number(sectionData[rounds])===1?' round ':' rounds ')+
       'for time:'
@@ -94,9 +94,9 @@ export function sectionTitling(sectionData) {
 
   return (
     <>
-      <h5>{formatDataStrings(sectionData[section_type])}</h5>
+      <h5 className='text-primary'>{formatDataStrings(sectionData[section_type])}</h5>
       {
-        sectionData[section_type]==='strength'?<div/>:
+        sectionData[section_type]==='S'?<div/>:
         <div>
           {sectionDetail}
         </div>
@@ -120,19 +120,19 @@ export function movementFormatting(movementData) {
   const score_type = movementData[movement_score_type]
 
   let prename_phrase
-  if (count==='') {
+  if (count===null) {
     prename_phrase = ''
   } else if (count_type==='reps') {
-    prename_phrase = count
+    prename_phrase = count.toString()
   } else {
-    prename_phrase = count + ' ' + count_type
+    prename_phrase = count.toString() + ' ' + count_type
   }
 
   let postname_phrase
-  if (score_number==='') {
+  if (score_number===null) {
     postname_phrase=''
   } else {
-    postname_phrase = ' @ '+score_number+score_type
+    postname_phrase = ' @ '+score_number.toString()+score_type
   }
 
   return (
