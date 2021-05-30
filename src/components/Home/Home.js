@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
-import Spinner from 'react-bootstrap/spinner'
+import Spinner from 'react-bootstrap/Spinner'
 import { AuthContext } from 'contexts/AuthContext'
 import { WorkoutDataContext } from 'contexts/WorkoutDataContext'
 import { date as date_planned, complete } from 'constants/workout'

@@ -1,7 +1,7 @@
 import React from 'react'
 import Datepicker from 'react-datepicker'
-import Button from 'react-bootstrap/button'
-import Card from 'react-bootstrap/card'
+import Button from 'react-bootstrap/Button'
+import Card from 'react-bootstrap/Card'
 import "react-datepicker/dist/react-datepicker.css";
 
 function DateCard(props) {

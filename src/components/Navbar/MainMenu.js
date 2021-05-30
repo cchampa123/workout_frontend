@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
-import Button from 'react-bootstrap/button'
-import Navbar from 'react-bootstrap/navbar'
-import Nav from 'react-bootstrap/nav'
+import Button from 'react-bootstrap/Button'
+import Navbar from 'react-bootstrap/Navbar'
+import Nav from 'react-bootstrap/Nav'
 import { PageContext } from 'contexts/PageContext'
 import Container from 'react-bootstrap/Container'
 

@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import Form from 'react-bootstrap/form'
+import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import Button from 'react-bootstrap/button'
-import Modal from 'react-bootstrap/modal'
+import Button from 'react-bootstrap/Button'
+import Modal from 'react-bootstrap/Modal'
 import {
   id,
   movement_id as movement_name,

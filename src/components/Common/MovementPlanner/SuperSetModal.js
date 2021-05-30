@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import Modal from 'react-bootstrap/modal'
-import Button from 'react-bootstrap/button'
+import Modal from 'react-bootstrap/Modal'
+import Button from 'react-bootstrap/Button'
 import Row from 'react-bootstrap/Row'
 
 import { buyin_number, buyout_number } from 'constants/section'

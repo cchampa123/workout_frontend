@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import Button from 'react-bootstrap/button'
+import Button from 'react-bootstrap/Button'
 import { WorkoutDataContext } from 'contexts/WorkoutDataContext'
 import WorkoutSummary from 'components/Common/WorkoutSummary/WorkoutSummary'
 import WorkoutPlanner from 'components/Common/WorkoutPlanner/WorkoutPlanner'

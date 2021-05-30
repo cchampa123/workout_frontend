@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
-import Form from 'react-bootstrap/form'
-import Button from 'react-bootstrap/button'
-import Spinner from 'react-bootstrap/spinner'
+import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
+import Spinner from 'react-bootstrap/Spinner'
 import image from '../img/open_logo.png'
 import axios from 'axios'
 import { API_URL } from 'constants/configs'

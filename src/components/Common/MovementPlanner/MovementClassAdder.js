@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react'
-import Modal from 'react-bootstrap/modal'
-import Form from 'react-bootstrap/form'
-import Button from 'react-bootstrap/button'
+import Modal from 'react-bootstrap/Modal'
+import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
 import { AuthContext } from 'contexts/AuthContext'
 import { addNewMovementClass } from 'utils/apiCalls'
 

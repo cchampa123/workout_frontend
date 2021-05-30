@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import Button from 'react-bootstrap/button'
+import Button from 'react-bootstrap/Button'
 import { PageContext } from 'contexts/PageContext'
 import DateCard from './DateCard'
 import SubmissionConfirmation from 'components/Common/SubmissionConfirmation'

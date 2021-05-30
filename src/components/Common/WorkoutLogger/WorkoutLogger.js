@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import Button from 'react-bootstrap/button'
+import Button from 'react-bootstrap/Button'
 import SectionScreen from './SectionScreen'
-import Form from 'react-bootstrap/form'
+import Form from 'react-bootstrap/Form'
 import MovementLogForm from './MovementLogForm'
 import {
   id as section_section_id
