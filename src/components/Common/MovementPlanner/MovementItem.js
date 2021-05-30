@@ -2,8 +2,8 @@ import React, { useContext, useState, useCallback } from 'react';
 import SuperSetModal from './SuperSetModal';
 import MovementMetricPicker from './MovementMetricPicker';
 import MovementClassAdder from './MovementClassAdder';
-import Row from 'react-bootstrap/row';
-import Col from 'react-bootstrap/col';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import './styles.css'

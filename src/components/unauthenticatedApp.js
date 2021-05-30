@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import Container from 'react-bootstrap/container'
-import Row from 'react-bootstrap/row'
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
 import Form from 'react-bootstrap/form'
 import Button from 'react-bootstrap/button'
 import Spinner from 'react-bootstrap/spinner'

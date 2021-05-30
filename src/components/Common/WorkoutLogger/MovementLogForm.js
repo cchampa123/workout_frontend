@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Form from 'react-bootstrap/form'
-import Row from 'react-bootstrap/row'
-import Col from 'react-bootstrap/col'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/button'
 import Modal from 'react-bootstrap/modal'
 import {

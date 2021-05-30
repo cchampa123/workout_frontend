@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/button'
 import Navbar from 'react-bootstrap/navbar'
 import Nav from 'react-bootstrap/nav'
 import { PageContext } from 'contexts/PageContext'
-import Container from 'react-bootstrap/container'
+import Container from 'react-bootstrap/Container'
 
 import logo192 from '../../img/logo192.png';
 
