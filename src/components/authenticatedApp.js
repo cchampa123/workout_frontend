@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { usePersistedState } from 'utils/stateHandlers'
 import Container from 'react-bootstrap/Container'
 import MainMenu from './Navbar/MainMenu'
 import Home from './Home/Home'
@@ -20,7 +19,7 @@ function AuthenticatedApp(props) {
   const [page, setPage] = useState({pageTitle:'Home', pageProps:{}});
   const pageValue = {page, setPage};
 
-  const [workoutData, setWorkoutData] = usePersistedState('workoutData', {
+  const [workoutData, setWorkoutData] = useState({
     workouts:[],
     sections:[],
     movements:[],

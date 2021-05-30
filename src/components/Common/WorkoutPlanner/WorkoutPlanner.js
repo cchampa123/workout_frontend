@@ -169,8 +169,8 @@ function WorkoutPlanner(props) {
       </Button>
       <SubmissionConfirmation
         submitted={submitted}
-        successFooter={successFooter()}
-        errorString={errorMessage()}
+        successFooter={successFooter}
+        errorString={errorMessage}
         successString={workoutPlannerSubmissionSuccess}
         error={Object.keys(errors).length>0}
         loading={loading}

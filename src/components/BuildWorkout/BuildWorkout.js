@@ -4,15 +4,15 @@ import { WorkoutDataContext } from 'contexts/WorkoutDataContext'
 import { createNewDefaultWorkout } from 'utils/createDefaults'
 
 function BuildWorkout(props) {
-
   const {workoutData, setWorkoutData} = useContext(WorkoutDataContext)
+  const newDefault = () => createNewDefaultWorkout(workoutData['workouts'])
 
   return(
     <div>
       <WorkoutPlanner
         workoutData={workoutData}
         setWorkoutData={setWorkoutData}
-        workout={createNewDefaultWorkout(workoutData['workouts'])}
+        workout={newDefault}
         sections={[]}
         movements={[]}
       />
