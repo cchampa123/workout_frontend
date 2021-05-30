@@ -93,6 +93,7 @@ function WorkoutPlanner(props) {
 
   function setMovementDataWrapper(newMovement, id=null) {
     const newMovementData = []
+    debugger
     const relevantID = id!==null?id:newMovement[movement_movement_id]
     if (movementData.map(x=>x[movement_movement_id]).includes(relevantID)) {
       for (const movement of movementData) {
@@ -111,8 +112,7 @@ function WorkoutPlanner(props) {
     setMovementData(newMovementData)
   }
 
-  const successFooter = () => {
-    return (
+  const successFooter = (
       <Button
         className='btn-success col-12'
         onClick={()=>setPage({pageTitle:'Home', pageProps:{}})}
@@ -120,15 +120,8 @@ function WorkoutPlanner(props) {
         OK
       </Button>
     )
-  }
 
-  const errorMessage = () => {
-    if (errors['noMovements']) {
-      return (workoutPlannerSubmissionFailureNoMovements)
-    } else {
-      return (workoutPlannerSubmissionFailureEmptyMovements)
-    }
-  }
+  const errorMessage = errors['noMovements']?workoutPlannerSubmissionFailureNoMovements:workoutPlannerSubmissionFailureEmptyMovements
 
   return(
     <MovementClassContext.Provider value={value}>
@@ -141,7 +134,7 @@ function WorkoutPlanner(props) {
         <SectionPlanner
           errors={errors[section_section_id]}
           key={section[section_section_id]}
-          workoutId={props.workout[workout_workout_id]}
+          workoutId={workoutData[workout_workout_id]}
           sectionData={section}
           setSectionData={setSectionDataWrapper}
           movementData={movementData}
