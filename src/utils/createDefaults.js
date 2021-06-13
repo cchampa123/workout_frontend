@@ -8,6 +8,7 @@ import {
   score_number as section_score_number,
   score_time as section_score_time,
   extra_instructions as section_extra_instructions,
+  order as section_order,
   buyout_number, buyin_number
 } from 'constants/section'
 
@@ -21,7 +22,8 @@ import {
   count as movement_count,
   score_number as movement_score_number,
   score_time as movement_score_time,
-  superset as movement_superset
+  superset as movement_superset,
+  order as movement_order
 } from 'constants/movement'
 
 import {
@@ -66,6 +68,7 @@ export function createNewDefaultSection(workout_id, sectionData) {
       0
   const num_new_sections = section_ids.filter(x=>typeof x === 'string').length
   const new_section_id = 'new_'+String(max_section_number+num_new_sections)
+  const order = section_ids.length+1
 
   return ({
     [section_section_id]:new_section_id,
@@ -76,7 +79,8 @@ export function createNewDefaultSection(workout_id, sectionData) {
     [section_round_type]:'F',
     [section_score_number]:null,
     [section_score_time]:'',
-    [section_extra_instructions]:''
+    [section_extra_instructions]:'',
+    [section_order]:order
   })
 }
 
@@ -103,6 +107,7 @@ export function createNewDefaultMovement(workout_id, section_id, movementData) {
     )
   ]
   const new_movement_superset = superSets.length>0?Math.max(...superSets.filter(x=>x!==buyout_number)):buyin_number+1
+  const order = movement_ids.length+1
 
   const newMovement = {
     [movement_movement_id]:new_movement_id,
@@ -115,6 +120,7 @@ export function createNewDefaultMovement(workout_id, section_id, movementData) {
     [movement_score_time]:'00:00:00',
     [movement_superset]:new_movement_superset,
     [movement_section_id]:section_id,
+    [movement_order]:order
   }
 
   return newMovement
@@ -133,5 +139,6 @@ export function createMovementWithRemovedData(oldMovementData, selected) {
     [movement_score_time]:'00:00:00',
     [movement_superset]:oldMovementData[movement_superset],
     [movement_section_id]:oldMovementData[movement_section_id],
+    [movement_order]:oldMovementData[movement_order]
   })
 }

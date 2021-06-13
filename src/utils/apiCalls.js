@@ -159,18 +159,11 @@ export async function submitNewData(token, workoutData, newWorkoutData, noUpdate
     newWorkoutData['movements'].map(
       async x=>{
         const {id} = x
-        console.log('section map')
-        console.log(sectionIdMap)
-        console.log('workout map')
-        console.log(workoutIdMap)
-        debugger
         const submit_package = {
           ...x,
           [movement_section_id]:sectionIdMap[x[movement_section_id]],
           [movement_workout_id]:workoutIdMap[x[movement_workout_id]]
         }
-        console.log('submit package')
-        console.log(submit_package)
         try {
           let response = await add_or_update(token, id, submit_package, 'movement_instance/')
           return response.data

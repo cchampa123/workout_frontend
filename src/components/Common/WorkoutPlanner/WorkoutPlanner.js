@@ -93,7 +93,6 @@ function WorkoutPlanner(props) {
 
   function setMovementDataWrapper(newMovement, id=null) {
     const newMovementData = []
-    debugger
     const relevantID = id!==null?id:newMovement[movement_movement_id]
     if (movementData.map(x=>x[movement_movement_id]).includes(relevantID)) {
       for (const movement of movementData) {

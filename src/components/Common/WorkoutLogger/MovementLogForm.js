@@ -71,7 +71,7 @@ function MovementLogForm(props) {
     <Modal.Body>
       <Form.Control
         type='number'
-        value={props.movementData[count]}
+        value={props.movementData[count]===null?'':props.movementData[count]}
         isInvalid={!!props.errors[props.movementData[id]]}
         onChange={e => props.setMovementData({...props.movementData, [count]:e.target.value})}
         placeholder={formatDataStrings(props.movementData[count_type])}
@@ -83,7 +83,7 @@ function MovementLogForm(props) {
     <Row className='align-items-center my-1 g-0'>
       <Col className='col-4'>
         <Form.Control
-          value={props.movementData[relevantScore]}
+          value={props.movementData[relevantScore]===null?'':props.movementData[relevantScore]}
           type='number'
           onChange={e => props.setMovementData({...props.movementData, [relevantScore]:e.target.value})}
           placeholder={formatDataStrings(relevantScore===count?props.movementData[count_type]:props.movementData[score_type])}

@@ -13,6 +13,7 @@ import moment from 'moment'
 import { date as date_planned, id as workout_workout_id } from 'constants/workout'
 import { workout_id as section_workout_id } from 'constants/section'
 import { workout_id as movement_workout_id } from 'constants/movement'
+import axios from 'axios'
 
 function AuthenticatedApp(props) {
 
@@ -33,6 +34,13 @@ function AuthenticatedApp(props) {
       })
     }
   }, [setWorkoutData])
+
+  axios.interceptors.response.use(function (response) {
+    return response
+  }, function (error) {
+    console.error(error)
+    props.setUser(null)
+  })
 
   async function wrapper(newWorkoutData, noUpdate=false) {
     const [submissionErrors, newData] = await submitNewData(

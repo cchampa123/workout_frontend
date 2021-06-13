@@ -1,12 +1,13 @@
 import React from 'react'
 import { sectionTitling, movementFormatting } from 'utils/sectionStringFormatting'
 import {
-  id as movement_instance_id
+  id as movement_instance_id,
+  order as movement_order
 } from 'constants/movement'
 
 function SectionSummary(props) {
 
-  const movementStrings = props.movementData.map(x=>movementFormatting(x))
+  //const movementStrings = props.movementData.map(x=>movementFormatting(x))
 
   return (
     <div className='mb-2'>
@@ -14,9 +15,9 @@ function SectionSummary(props) {
         {sectionTitling(props.sectionData)}
       </div>
       {
-        movementStrings.map(x=>
-          <div key={movement_instance_id}>
-            <i>{x}</i>
+        props.movementData.sort((a,b)=>(a[movement_order]>b[movement_order]?1:-1)).map(x=>
+          <div key={x[movement_instance_id]}>
+            <i>{movementFormatting(x)}</i>
           </div>
         )
       }
