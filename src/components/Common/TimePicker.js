@@ -1,50 +1,61 @@
 import React from 'react'
 import Form from 'react-bootstrap/Form'
-import { formatTwoDigitsTime, formatTwoDigitTimeToString } from 'utils/stringfunctions'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import { formatTwoDigitsTime } from 'utils/stringfunctions'
 
 function TimePicker(props) {
 
-  let [hours, minutes, seconds] = props.value.split(':').map(x=>formatTwoDigitTimeToString(x))
-  // if (hours==="00") hours = ""
-  // if (minutes==="00") minutes = ""
-  // if (seconds==="00") seconds = ""
-
-
-  const clicked = (type, value) => {
-    if (type==='hours') {
-      props.onChange(formatTwoDigitsTime(value)+':'+formatTwoDigitsTime(minutes)+':'+formatTwoDigitsTime(seconds))
-    } else if (type==='minutes') {
-      props.onChange(formatTwoDigitsTime(hours)+':'+formatTwoDigitsTime(value)+':'+formatTwoDigitsTime(seconds))
-    } else {
-      props.onChange(formatTwoDigitsTime(hours)+':'+formatTwoDigitsTime(minutes)+':'+formatTwoDigitsTime(value))
-    }
-  }
+  const numbers = [...Array(60).keys()]
+  const [hours, minutes, seconds] = props.scoreTime.split(':')
 
   return (
-    <Form onSubmit={(e)=>props.handleSubmit(e)}>
-      <Form.Label>Hours</Form.Label>
-      <Form.Control
-        type='number'
-        pattern='[0-9]*'
-        placeholder='Hrs'
-        value={hours}
-        onChange={(e)=>clicked('hours', e.target.value)}
-      />
-      <Form.Label>Minutes</Form.Label>
-      <Form.Control
-        type='number'
-        placeholder='Min'
-        value={minutes}
-        onChange={(e)=>clicked('minutes', e.target.value)}
-      />
-      <Form.Label>Seconds</Form.Label>
-      <Form.Control
-        type='number'
-        pattern='[0-9]*'
-        placeholder='Sec'
-        value={seconds}
-        onChange={(e)=>clicked('seconds', e.target.value)}
-      />
+
+    <Form onSubmit={(e)=>e.preventDefault()}>
+      <Row>
+        <Col>
+          <Form.Label>Hours</Form.Label>
+          <Form.Control
+            as='select'
+            value={Number(hours)}
+            onChange={(e) => props.onSelect(
+              formatTwoDigitsTime(e.target.value)+":"+minutes+":"+seconds
+            )}
+          >
+            {
+              numbers.map(x=> <option key={x} value={x}>{x}</option>)
+            }
+          </Form.Control>
+        </Col>
+        <Col>
+          <Form.Label>Minutes</Form.Label>
+          <Form.Control
+            as='select'
+            value={Number(minutes)}
+            onChange={(e) => props.onSelect(
+              hours+":"+formatTwoDigitsTime(e.target.value)+":"+seconds
+            )}
+          >
+            {
+              numbers.map(x=> <option key={x} value={x}>{x}</option>)
+            }
+          </Form.Control>
+        </Col>
+        <Col>
+          <Form.Label>Seconds</Form.Label>
+          <Form.Control
+            as='select'
+            value={Number(seconds)}
+            onChange={(e) => props.onSelect(
+              hours+":"+minutes+":"+formatTwoDigitsTime(e.target.value)
+            )}
+          >
+            {
+              numbers.map(x=> <option key={x} value={x}>{x}</option>)
+            }
+          </Form.Control>
+        </Col>
+      </Row>
     </Form>
   )
 }

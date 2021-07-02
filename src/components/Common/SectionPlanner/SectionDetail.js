@@ -3,9 +3,8 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Col from 'react-bootstrap/Col'
-import Row from 'react-bootstrap/Row'
+import TimePicker from 'components/Common/TimePicker'
 
-import { convertToDurationString } from 'utils/stringfunctions'
 import { sectionTitling, formatDataStrings, unformatDataStrings } from 'utils/sectionStringFormatting'
 
 import {
@@ -22,33 +21,19 @@ import {
 function SectionDetail(props) {
 
   const [show, setShow] = useState(false)
-  const [form, setForm] = useState({
-    ...props.sectionData,
-    'round_duration_minutes':String(Number(props.sectionData[round_duration].split(':')[1])),
-    'round_duration_seconds':String(Number(props.sectionData[round_duration].split(':')[2]?props.sectionData[round_duration].split(':')[2]:''))
-  })
+  const [form, setForm] = useState(props.sectionData)
   const [errors, setErrors] = useState({})
 
   const checkFormErrors = () => {
-    const {rounds, round_type, section_type, round_duration_minutes, round_duration_seconds} = form
+    const {rounds, round_type, section_type } = form
     const newErrors = {}
-    if (round_type==='amrap' && round_duration_minutes==='0' && round_duration_seconds==='0') {
-      newErrors.round_duration_minutes='AMRAP-type workouts must have an associated round duration.'
-      newErrors.round_duration_seconds=''
+    if (round_type==='amrap' && round_duration==='00:00:00') {
+      newErrors.round_duration='AMRAP-type workouts must have an associated round duration.'
     }
-    if (round_type==='amrap' && round_duration_minutes==='' && round_duration_seconds==='') {
-      newErrors.round_duration_minutes='AMRAP-type workouts must have an associated round duration.'
-      newErrors.round_duration_seconds=''
+    if (round_type==='emom' && round_duration==='00:00:00') {
+      newErrors.round_duration='EMOM-type workouts must have an associated round duration.'
     }
-    if (round_type==='emom' && round_duration_minutes==='0' && round_duration_seconds==='0') {
-      newErrors.round_duration_minutes='EMOM-type workouts must have an associated round duration.'
-      newErrors.round_duration_seconds=''
-    }
-    if (round_type==='emom' && round_duration_minutes==='' && round_duration_seconds==='') {
-      newErrors.round_duration_minutes='EMOM-type workouts must have an associated round duration.'
-      newErrors.round_duration_seconds=''
-    }
-    if (rounds==='' && section_type!=='strength') {
+    if (rounds==='' && section_type!=='S') {
       newErrors.rounds='Please enter the number of rounds for this section.'
     }
     return newErrors
@@ -59,15 +44,11 @@ function SectionDetail(props) {
       setForm({
         ...form,
         round_type:value,
-        'round_duration_minutes':'',
-        'round_duration_seconds':''
       })
     } else if (field === section_type && value==='S') {
       setForm({
         ...form,
         section_type:value,
-        'round_duration_minutes':'',
-        'round_duration_seconds':'',
         rounds:'',
         round_type:''
       })
@@ -90,24 +71,10 @@ function SectionDetail(props) {
     if (Object.keys(errors).length > 0) {
       setErrors(errors)
     } else {
-      if (form['round_duration_minutes']===''&&form['round_duration_seconds']==='') {
-        const {round_duration_minutes, round_duration_seconds, ...rest} = form
         props.setSectionData({
-          ...rest,
-          round_duration:''
+          ...form,
+          rounds:Number(form[rounds])
         })
-      } else {
-        const {round_duration_minutes, round_duration_seconds, rounds, ...rest} = form
-        props.setSectionData({
-          ...rest,
-          rounds:Number(rounds),
-          [round_duration]:convertToDurationString(
-            '00',
-            form['round_duration_minutes'],
-            form['round_duration_seconds'],
-          )
-        })
-      }
       setErrors(errors)
       setShow(false)
     }
@@ -175,37 +142,10 @@ function SectionDetail(props) {
             {form[round_type]==='F'?<div/>:
             <div>
               <Form.Label>Round Duration</Form.Label>
-              <Row>
-                <Col>
-                  <i>Minutes</i>
-                  <Form.Control
-                    value={form['round_duration_minutes']}
-                    type='number'
-                    onChange={e=>setField('round_duration_minutes', e.target.value)}
-                    placeholder='Min'
-                    isInvalid={!!errors.round_duration_minutes}
-                  />
-                </Col>
-                <Col>
-                  <i>Seconds</i>
-                  <Form.Control
-                    type='number'
-                    value={form['round_duration_seconds']}
-                    onChange={e=>setField('round_duration_seconds', e.target.value)}
-                    placeholder='Sec'
-                    isInvalid={!!errors.round_duration_minutes}
-                  />
-                </Col>
-              </Row>
-              {errors.round_duration_minutes ?
-              <Row className='text-danger' style={{fontSize:14}}>
-                <Col>
-                {errors.round_duration_minutes}
-                </Col>
-              </Row>
-              :
-              <div/>
-              }
+              <TimePicker
+                scoreTime={form[round_duration]}
+                onSelect={e=>setForm({...form, [round_duration]:e})}
+              />
             </div>
             }
           </div>

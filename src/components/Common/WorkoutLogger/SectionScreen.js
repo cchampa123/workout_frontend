@@ -1,11 +1,29 @@
 import React from 'react'
 import Card from 'react-bootstrap/Card'
 import { movementFormatting } from 'utils/sectionStringFormatting'
-import { extra_instructions } from 'constants/section'
+import { extra_instructions, score_number, score_time, round_type, section_type } from 'constants/section'
 import { id } from 'constants/movement'
 import SectionDetail from 'components/Common/SectionPlanner/SectionDetail'
+import TimePicker from 'components/Common/TimePicker'
+import Form from 'react-bootstrap/Form'
 
 function SectionScreen(props) {
+
+  const sectionScoreInput = props.sectionData[round_type]!=='F'?
+    <Form>
+      <Form.Label>Score</Form.Label>
+      <Form.Control
+        type='input'
+        value={props.sectionData[score_number]}
+        onChange={e=>props.setSectionData({...props.sectionData, [score_number]:e.target.value})}
+        placeholder='Score'
+      />
+    </Form>
+    :
+    <TimePicker
+      scoreTime={props.sectionData[score_time]}
+      onSelect={e=>props.setSectionData({...props.sectionData, [score_time]:e})}
+    />
 
   return (
     <div className='mb-3'>
@@ -31,6 +49,7 @@ function SectionScreen(props) {
         <div/>
         }
       </Card>
+      {props.sectionData[section_type]!=='S'?sectionScoreInput:null}
     </div>
   )
 }
