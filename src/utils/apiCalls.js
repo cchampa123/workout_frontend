@@ -5,59 +5,36 @@ import { id as section_section_id, workout_id as section_workout_id } from 'cons
 import { workout_id as movement_workout_id, section_id as movement_section_id, id as movement_movement_id } from 'constants/movement'
 import moment from 'moment'
 
-export async function getRecentWorkouts(token) {
+export async function getData(key, token, parameters) {
 
-  try {
-    const workouts = await axios.get(API_URL+'workout/',
-      {
-        headers: {
-          'Authorization': `Token ${token}`
-        },
-        params: {
-          'date__lte':moment().add(LOCAL_DATE_RANGE, 'd').format('YYYY-MM-DD'),
-          'date__gte':moment().subtract(LOCAL_DATE_RANGE, 'd').format('YYYY-MM-DD')
-        }
-      }
-    )
-    const sections = await Promise.all(
-      workouts.data.map(async workout=>{
-        const response = await axios.get(API_URL+'section/',
-          {
-            headers:{
-              'Authorization': `Token ${token}`
-            },
-            params: {
-              [section_workout_id]:workout[workout_workout_id]
-            }
-          }
-        )
-        return response.data
-        }
+  const workouts = await axios.get(API_URL+key,
+    {
+      headers: {
+        'Authorization': `Token ${token}`
+      },
+      params: parameters
+    }
+  )
+  return (workouts.data)
+}
+
+export function sendData(key, token, data) {
+  if (workout_workout_id in data) {
+    return(
+      axios.put(
+        API_URL + key + data[workout_workout_id] + '/',
+        {...data, [date_planned]:moment(data[date_planned]).format('YYYY-MM-DD')},
+        {headers:{'Authorization':`Token ${token}`}}
       )
     )
-    const movements = await Promise.all(
-      workouts.data.map(async workout =>{
-        const response = await axios.get(API_URL+'movement_instance/',
-          {
-            headers:{
-              'Authorization':`Token ${token}`
-            },
-            params:{
-              [movement_workout_id]:workout[workout_workout_id]
-            }
-          }
-        )
-        return response.data
-        }
+  } else {
+    return (
+      axios.post(
+        API_URL + key,
+        {...data, [date_planned]:moment(data[date_planned]).format('YYYY-MM-DD')},
+        {headers:{'Authorization':`Token ${token}`}}
       )
     )
-    return ({
-      'workouts':workouts.data,
-      'sections':[].concat(sections.flat()),
-      'movements':[].concat(movements.flat())
-    })
-  } catch (error) {
-    return (error)
   }
 }
 

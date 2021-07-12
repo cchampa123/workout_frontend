@@ -5,6 +5,7 @@ import NumPad from 'components/Common/NumPad'
 import TimePicker from 'components/Common/TimePicker'
 import Dropdown from 'react-bootstrap/Dropdown'
 import FakeForm from './FakeForm'
+import Form from 'react-bootstrap/Form'
 import {
   count_type,
   score_type,
@@ -29,33 +30,28 @@ function MovementMetricPickerMovementChosen(props) {
   const relevant_defaults = props.count?class_count_types:class_score_types
 
   const [show, setShow] = useState(false)
-  const [number, setNumber] = useState(props.movementData[relevant_number_variable])
-  const [type, setType] = useState(props.movementData[relevant_type_variable])
 
-  function hideHelper() {
-    setShow(false)
-    setNumber(props.movementData[relevant_number_variable])
-  }
-
-  function updateDataHelper() {
-    if (relevant_number_variable!==score_time) {
-      setNumber(Number(number))
-    } else {
-      setNumber(number)
-    }
-    props.setMovementData(
-        {
+  const setField = (field, value) => {
+    if (field === score_type) {
+      if (value === 'time') {
+        props.setMovementData({
           ...props.movementData,
-          [relevant_number_variable]:relevant_number_variable===score_time?number:Number(number),
-          [relevant_type_variable]:type
-        }
-      )
-    setShow(false)
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    updateDataHelper()
+          [score_number]:null,
+          [field]:value
+        })
+      } else {
+        props.setMovementData({
+          ...props.movementData,
+          [score_time]:"00:00:00",
+          [field]:value
+        })
+      }
+    } else {
+      props.setMovementData({
+        ...props.movementData,
+        [field]:value
+      })
+    }
   }
 
   return(
@@ -71,7 +67,7 @@ function MovementMetricPickerMovementChosen(props) {
       />
       <Modal
         show={show}
-        onHide={()=>hideHelper()}
+        onHide={()=>setShow(false)}
         aria-labelledby='contained-modal-title-vcenter'
         centered
       >
@@ -81,7 +77,7 @@ function MovementMetricPickerMovementChosen(props) {
               style={{textTransform:'capitalize'}}
               className='btn col-12 text-dark'
             >
-              {formatDataStrings(type)}
+              {formatDataStrings(props.movementData[relevant_type_variable])}
             </Dropdown.Toggle>
             <Dropdown.Menu className='col-12'>
               {
@@ -89,7 +85,7 @@ function MovementMetricPickerMovementChosen(props) {
                   <Dropdown.Item
                     key={x}
                     style={{textTransform:'capitalize'}}
-                    onClick={()=>setType(x)}
+                    onClick={()=>setField(relevant_type_variable, x)}
                   >
                     {formatDataStrings(x)}
                   </Dropdown.Item>
@@ -102,26 +98,23 @@ function MovementMetricPickerMovementChosen(props) {
           {
             relevant_number_variable===score_time ?
             <TimePicker
-              value={number}
-              handleSubmit={(e)=>handleSubmit(e)}
-              onChange={(selected) => setNumber(selected)}
+              scoreTime={props.movementData[relevant_number_variable]}
+              onSelect={(selected) => setField(relevant_number_variable, selected)}
             /> :
-            <NumPad
-              handleSubmit={(e)=>handleSubmit(e)}
+            <Form.Control
+              type='number'
               placeholder='Enter value'
-              value={number}
-              onChange={(selected) => setNumber(selected)}
+              value={props.movementData[relevant_number_variable]}
+              onChange={(e) => setField(relevant_number_variable, e.target.value)}
             />
           }
         </Modal.Body>
         <Modal.Footer>
           <Button
             className='col-12'
-            onClick={() => updateDataHelper()}>
+            onClick={() => setShow(false)}
+          >
             Submit
-          </Button>
-          <Button className='col-12' onClick={()=>hideHelper()}>
-            Cancel
           </Button>
         </Modal.Footer>
       </Modal>

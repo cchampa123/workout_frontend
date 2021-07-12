@@ -4,6 +4,7 @@ import MovementMetricPicker from './MovementMetricPicker';
 import MovementClassAdder from './MovementClassAdder';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form'
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import './styles.css'
@@ -32,7 +33,7 @@ function MovementItem(props) {
     if (selected.length>0 && selected[0]['customOption']) {
       setNewMovement(selected)
     } else {
-      props.setMovementData(
+      props.setForm(
         createMovementWithRemovedData(props.movement, selected)
       )
     }
@@ -68,22 +69,26 @@ function MovementItem(props) {
           <SuperSetModal
             movement={props.movement}
             selected={selectedMovement}
-            setMovementData={props.setMovementData}
+            setMovementData={props.setForm}
           />
         </Col>
         <Col className='col-9'>
-          <AsyncTypeahead
-            onChange={(selected) => updateMovement(selected)}
-            selected={ selectedMovement }
-            isLoading={loading}
-            onSearch={handleSearch}
-            className='col-12'
-            allowNew
-            id='typeahead'
-            labelKey='name'
-            placeholder='Movement'
-            options={movementClassData}
-          />
+          <Form.Group>
+            <AsyncTypeahead
+              onChange={(selected) => updateMovement(selected)}
+              selected={ selectedMovement }
+              isLoading={loading}
+              onSearch={handleSearch}
+              className='col-12'
+              allowNew
+              isInvalid={!!props.errors[instance_class_id]}
+              id='typeahead'
+              labelKey='name'
+              placeholder='Movement'
+              options={movementClassData}
+            />
+            <Form.Control.Feedback type='invalid'>{props.errors[instance_class_id]}</Form.Control.Feedback>
+          </Form.Group>
         </Col>
       </Row>
       <Row className='m-1'>
@@ -92,14 +97,14 @@ function MovementItem(props) {
             count
             movementClass={selectedMovement}
             movementData={props.movement}
-            setMovementData={props.setMovementData}
+            setMovementData={props.setForm}
           />
         </Col>
         <Col>
           <MovementMetricPicker
             movementClass={selectedMovement}
             movementData={props.movement}
-            setMovementData={props.setMovementData}
+            setMovementData={props.setForm}
           />
         </Col>
       </Row>

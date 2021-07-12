@@ -1,20 +1,24 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import Button from 'react-bootstrap/Button'
 import SectionScreen from './SectionScreen'
 import Form from 'react-bootstrap/Form'
 import MovementLogForm from './MovementLogForm'
 import {
-  id as section_section_id
+  id as section_section_id,
+  movement_set,
+  order as section_order
 } from 'constants/section'
 import {
   section_id as movement_section_id,
   score_number,
   score_type,
   id as movement_movement_id,
-  count as movement_count
+  count as movement_count,
+  order as movement_order
 } from 'constants/movement'
 import {
-  complete as workout_complete
+  complete as workout_complete,
+  section_set
 } from 'constants/workout'
 import {
   workoutLoggerUnfinishedMovements,
@@ -22,131 +26,97 @@ import {
   workoutLoggerSubmissionSuccess
 } from 'constants/strings'
 import SubmissionConfirmation from 'components/Common/SubmissionConfirmation'
+import { validateWorkout } from 'utils/dataValidators'
+import { sendData } from 'utils/apiCalls'
+import { AuthContext } from 'contexts/AuthContext'
 
 function WorkoutLogger(props) {
 
-  const [sectionData, setSectionData] = useState(props.workoutData['sections'])
-  const [movementData, setMovementData] = useState(props.workoutData['movements'])
-
+  const user = useContext(AuthContext)
+  const [form, setForm] = useState(props.workoutData)
   const [activeSection, setActiveSection] = useState(0)
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
 
-  const checkErrors = () => {
-    const newErrors={}
-    for (const movement of movementData) {
-      if (movement[movement_count]===null){
-        newErrors[movement[movement_movement_id]] = 'Missing'
-      }
-      if (movement[score_number]===''&&movement[score_type]!=='time') {
-        newErrors[movement[movement_movement_id]] = 'Missing'
-      }
-    }
-    return newErrors
-  }
-
-  const incrementActiveSection = () => {
+  const incrementActiveSection = async () => {
     const newSection = activeSection + 1
-    if (newSection === sectionData.length) {
-      setErrors(checkErrors())
-      handleSubmit()
+    if (newSection === form[section_set].length) {
+      setLoading(true)
+      setSubmitted(true)
+      const newErrors = validateWorkout(form, true)
+      if (Object.keys(newErrors).length === 0) {
+        await sendData('workout/', user.token, {...form, [workout_complete]:true})
+        props.mutate()
+      }
+      setErrors(newErrors)
+      setLoading(false)
     } else {
       setActiveSection(newSection)
     }
   }
 
-  const handleSubmit = async () => {
-    setLoading(true)
-    const newErrors = checkErrors()
-    if (Object.keys(newErrors).length===0){
-      setErrors(newErrors)
-      const newWorkoutData = {
-        'workouts':[{...props.workoutData['workouts'], [workout_complete]:true}],
-        'sections':sectionData,
-        'movements':movementData
-      }
-      setSubmitted(true)
-      props.setWorkoutData(newWorkoutData).then(res => {
-        if (res.length > 0) {
-          setErrors({submissionErrors:res})
-        }
-        setLoading(false)
-      })
-    } else {
-      setErrors(newErrors)
-      setSubmitted(true)
-      setLoading(false)
-    }
-  }
+  const handleSubmit = () => console.log('submitted!')
 
-
-  function setSectionDataWrapper(newSection, id=null) {
+  const updatedSectionData = (newData) => {
     const newSectionData = []
-    const relevantID = id!==null?id:newSection[section_section_id]
-    if (sectionData.map(x=>x[section_section_id]).includes(relevantID)) {
-      for (const section of sectionData) {
-        if (section[section_section_id]===relevantID) {
-          if (newSection !== null) {
-            newSectionData.push(newSection)
-          }
-        } else {
-          newSectionData.push(section)
-        }
+    let iterator = 0
+    for (const section of form[section_set]) {
+      if (iterator === activeSection) {
+        newSectionData.push(newData)
+      } else {
+        newSectionData.push(section)
       }
-    } else {
-      newSectionData.push(...sectionData, newSection)
+      iterator++
     }
-    setSectionData(newSectionData)
+    return newSectionData
   }
 
-  function setMovementDataWrapper(newMovement, id=null) {
+  const updatedMovementData = (newData, movementOrder) => {
     const newMovementData = []
-    const relevantID = id!==null?id:newMovement.id
-    if (movementData.map(x=>x[movement_movement_id]).includes(relevantID)) {
-      for (const movement of movementData) {
-        if (movement[movement_movement_id]===relevantID) {
-          if (newMovement !== null) {
-            newMovementData.push(newMovement)
-          }
-        } else {
-          newMovementData.push(movement)
-        }
+    for (const movement of form[section_set][activeSection][movement_set]) {
+      if (movement[movement_order] === movementOrder) {
+        newMovementData.push(newData)
+      } else {
+        newMovementData.push(movement)
       }
-    } else {
-      newMovementData.push(...movementData, newMovement)
     }
-    newMovementData.sort((a,b)=>a['superset']>b['superset']?1:(a['superset']===b['superset']?0:-1))
-    setMovementData(newMovementData)
+    return newMovementData
   }
 
-  const errorString = !!errors.submissionErrors ? workoutLoggerNetworkError : workoutLoggerUnfinishedMovements
+  const sectionErrors = !!errors[section_set] ? errors[section_set] : {}
+  const relevantSection = form[section_set][activeSection][section_order]
 
   return(
     <div>
-      <SectionScreen
-        sectionData={sectionData[activeSection]}
-        setSectionData={setSectionDataWrapper}
-        movementData={movementData.filter(
-          x=>x[movement_section_id]===sectionData[activeSection][section_section_id]
-        )}
-      />
       <Form onSubmit={e=>e.preventDefault()}>
+        <SectionScreen
+          sectionData={form[section_set][activeSection]}
+          setSectionData={newSectionData=>setForm({
+            ...form,
+            [section_set]: updatedSectionData(newSectionData)
+          })}
+          errors={sectionErrors}
+        />
         {
-          movementData.filter(
-            x=>x[movement_section_id]===sectionData[activeSection][section_section_id]
-          ).map(y=>
+          form[section_set][activeSection][movement_set].map(y=>
             <MovementLogForm
-              key={y[movement_movement_id]}
-              errors={errors}
+              key={y[movement_order]}
+              errors={!!sectionErrors[relevantSection]?sectionErrors[relevantSection]:{}}
               movementData={y}
-              setMovementData={setMovementDataWrapper}
+              setMovementData={movementData => setForm({
+                ...form,
+                [section_set]: updatedSectionData({
+                    ...form[section_set][activeSection],
+                    [movement_set]:updatedMovementData(movementData, y[movement_order])
+                })
+              })}
             />
           )
         }
       </Form>
       <Button className='btn-secondary col-12 mt-3' onClick={incrementActiveSection}>
-        {activeSection+1===sectionData.length?'Complete Workout':'Done with This Section'}
+        {activeSection+1===form[section_set].length?'Complete Workout':'Done with This Section'}
       </Button>
       {activeSection===0?<div/>:
         <Button className='btn-light col-12 mt-1' onClick={()=>setActiveSection(activeSection-1)}>
@@ -154,13 +124,17 @@ function WorkoutLogger(props) {
         </Button>
       }
       <SubmissionConfirmation
-        submitted={submitted}
-        successString={workoutLoggerSubmissionSuccess}
-        errorString={errorString}
-        error={Object.keys(errors).length>0}
+        showConfirmation={submitted}
+        setShowConfirmation={setSubmitted}
         loading={loading}
-        setSubmitted={setSubmitted}
+        setLoading={setLoading}
+        errors={Object.keys(errors).length > 0}
+        successString={'All done'}
+        successHeader='Nice Work'
+        errorString='Something went wrong. Correct the errors and try again'
+        errorHeader='Uh oh...'
       />
+
     </div>
   )
 }

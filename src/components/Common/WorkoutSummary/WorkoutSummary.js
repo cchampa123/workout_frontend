@@ -4,7 +4,8 @@ import Button from 'react-bootstrap/Button'
 import SectionSummary from './SectionSummary'
 import { PageContext } from 'contexts/PageContext'
 import {
-  date as date_planned
+  date as date_planned,
+  section_set
 } from 'constants/workout'
 import {
   section_id as movement_section_id
@@ -20,11 +21,7 @@ function WorkoutSummary(props) {
   const goButton = (
     <Button
       onClick={() => setPage(
-        {pageTitle:'Log Workout', pageProps:{workoutData:{
-          'workouts':props.workout,
-          'sections':props.sections,
-          'movements':props.movements
-        }}})
+        {pageTitle:'Log Workout', pageProps:{workoutData:props.workout}})
       }
       className='btn-secondary col-12'
     >
@@ -39,14 +36,10 @@ function WorkoutSummary(props) {
     <div className='mb-2'>
       {props.dateHeader?dateHeader:<div/>}
       <Card>
-        {props.sections.map(section=>
+        {props.workout[section_set].map(section=>
           <SectionSummary
             key={section[section_section_id]}
             sectionData={section}
-            movementData={props.movements.filter(
-              movement=>movement[movement_section_id]===section[section_section_id]
-            )
-          }
           />
         )}
       </Card>

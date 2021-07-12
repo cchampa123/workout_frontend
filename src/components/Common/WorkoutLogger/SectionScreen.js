@@ -1,14 +1,15 @@
 import React from 'react'
 import Card from 'react-bootstrap/Card'
 import { movementFormatting } from 'utils/sectionStringFormatting'
-import { extra_instructions, score_number, score_time, round_type, section_type } from 'constants/section'
+import { extra_instructions, score_number, score_time, round_type, section_type, movement_set, order as section_order } from 'constants/section'
+import { order as movement_order } from 'constants/movement'
 import { id } from 'constants/movement'
 import SectionDetail from 'components/Common/SectionPlanner/SectionDetail'
 import TimePicker from 'components/Common/TimePicker'
 import Form from 'react-bootstrap/Form'
 
 function SectionScreen(props) {
-
+  const sectionErrors = !!props.errors[props.sectionData[section_order]] ? props.errors[props.sectionData[section_order]] : {}
   const sectionScoreInput = props.sectionData[round_type]!=='F'?
     <Form>
       <Form.Label>Score</Form.Label>
@@ -30,18 +31,13 @@ function SectionScreen(props) {
       <Card>
         <Card.Header>
           <SectionDetail
-            sectionData={props.sectionData}
-            setSectionData={props.setSectionData}
+            errors={sectionErrors}
+            form={props.sectionData}
+            setForm={props.setSectionData}
             noDelete
           />
         </Card.Header>
-        <Card.Body>
-          {
-            props.movementData.map(
-              x=><div key={x[id]}><i>{movementFormatting(x)}</i></div>
-            )
-          }
-        </Card.Body>
+
         {props.sectionData[extra_instructions]!==''?
         <Card.Footer>
           {props.sectionData[extra_instructions]}

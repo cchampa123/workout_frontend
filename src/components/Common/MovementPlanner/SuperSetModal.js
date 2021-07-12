@@ -23,7 +23,7 @@ function SuperSetModal(props) {
   }
 
   function deleteMovement() {
-    props.setMovementData(null, props.movement[movement_id])
+    props.setMovementData(null)
     setShow(false)
   }
 

@@ -6,37 +6,57 @@ import MovementItem from 'components/Common/MovementPlanner/MovementItem'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
-import { section_type } from 'constants/section'
-import { createNewDefaultMovement } from 'utils/createDefaults'
-
 import {
   id as movement_id,
-  section_id as movement_section_id
+  section_id as movement_section_id,
+  order as movement_order
 } from 'constants/movement'
 
 import {
-  id as section_section_id
+  id as section_section_id,
+  section_type,
+  movement_set
 } from 'constants/section'
 
+import { createNewDefaultMovement } from 'utils/createDefaults'
+
 function SectionPlanner(props) {
+
+  const sortedMovementData = (newData, movementToUpdate) => {
+    const newMovementData = newData ?
+      [...props.sectionData[movement_set].filter(
+        x => x[movement_order] !== movementToUpdate
+      ), newData]
+      :
+      [...props.sectionData[movement_set].filter(
+        x => x[movement_order] !== movementToUpdate
+      )]
+    newMovementData.sort((a,b)=>(a[movement_order]>b[movement_order]) ? 1 : -1)
+
+    const newSectionData = {...props.sectionData, [movement_set]:newMovementData}
+    return newSectionData
+  }
+
+  const movementErrors = !!props.errors[movement_set]?props.errors[movement_set]:{}
 
   return(
     <Card className='my-1 bg-light'>
         <Row className='m-1'>
           <SectionDetail
-            sectionData={props.sectionData}
-            setSectionData={props.setSectionData}
+            form={props.sectionData}
+            setForm={props.setForm}
+            errors={props.errors}
           />
         </Row>
-        {
-          props.movementData.filter(movement=>movement!==null).filter(
-            x=>x[movement_section_id]===props.sectionData[section_section_id]
-          ).map(movement =>
+        {props.sectionData[movement_set].map(movement =>
             <MovementItem
               key={movement[movement_id]}
               movement={movement}
-              setMovementData={props.setMovementData}
+              setForm={movementData => props.setForm(
+                sortedMovementData(movementData, movement[movement_order])
+              )}
               sectionType={props.sectionData[section_type]}
+              errors={!!movementErrors[movement[movement_order]]?movementErrors[movement[movement_order]]:{}}
             />
           )
         }
@@ -44,13 +64,15 @@ function SectionPlanner(props) {
           <Col>
             <Button
               className='btn btn-dark col-12'
-              onClick={()=>props.setMovementData(
-                createNewDefaultMovement(
-                  props.workoutId,
-                  props.sectionData[section_section_id],
-                  props.movementData
-                )
-              )}
+              onClick={()=>props.setForm({
+                ...props.sectionData,
+                [movement_set]:[
+                  ...props.sectionData[movement_set],
+                  createNewDefaultMovement(
+                    props.sectionData[movement_set]
+                  )
+                ]
+              })}
             >
               Add New Movement
             </Button>

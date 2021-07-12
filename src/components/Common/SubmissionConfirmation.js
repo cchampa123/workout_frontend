@@ -9,50 +9,43 @@ function SubmissionConfirmation(props) {
 
   const { setPage } = useContext(PageContext)
 
-  const loadingHeader = 'Loading...'
-  const loadingBody = <div className='text-center'><Spinner animation='border'/></div>
-  const loadingFooter = <div/>
-
-  const successHeader = <strong className='text-center col-12'>All Set</strong>
-  const successBody = props.successString
-  const successFooter = props.successFooter?props.successFooter:(
-    <Button
-      className='btn btn-success col-12'
-      onClick={()=>setPage({pageTitle:'Home', pageProps:{}})}
-    >
-      OK
-    </Button>
+  const nonLoadingBody = (
+    <>
+    <Modal.Header className='bg-dark text-white'>
+    {props.errors?props.errorHeader:props.successHeader}
+    </Modal.Header>
+    <Modal.Body>
+      {props.errors?props.errorString:props.successString}
+    </Modal.Body>
+    <Modal.Footer>
+      <Button
+        className={props.errors?'col-12 btn-danger':'col-12 btn-success'}
+        onClick={props.errors ?
+          () => props.setShowConfirmation(false):
+          () => setPage({pageTitle:'Home', pageProps:{}})
+        }
+      >
+        OK
+      </Button>
+    </Modal.Footer>
+    </>
   )
 
-  const failureHeader = <strong className='text-center col-12'>Something's not right...</strong>
-  const failureBody = props.errorString
-  const failureFooter = props.failureFooter?props.failureFooter:(
-    <Button
-      className='btn btn-danger col-12'
-      onClick={()=>props.setSubmitted(false)}
-    >
-    Fix Errors
-    </Button>
+  const loadingBody = (
+    <>
+    <Modal.Header className='bg-dark text-white'>Loading...</Modal.Header>
+    <Modal.Body>
+      <div className='text-center'><Spinner animation='border'/></div>
+    </Modal.Body>
+    </>
   )
-
-  const relevantHeader = props.error ? failureHeader : successHeader
-  const relevantBody = props.error ? failureBody : successBody
-  const relevantFooter = props.error ? failureFooter : successFooter
 
   return (
     <Modal
-      show={props.submitted}
-      onHide={()=>props.setSubmitted(false)}
+      show={props.showConfirmation}
+      onHide={()=>props.setShowConfirmation(false)}
     >
-      <Modal.Header className='bg-dark text-white'>
-        {props.loading?loadingHeader:relevantHeader}
-      </Modal.Header>
-      <Modal.Body>
-        {props.loading?loadingBody:relevantBody}
-      </Modal.Body>
-      <Modal.Footer>
-        {props.loading?loadingFooter:relevantFooter}
-      </Modal.Footer>
+      {props.loading?loadingBody:nonLoadingBody}
     </Modal>
   )
 }

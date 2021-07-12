@@ -2,19 +2,23 @@ import React, { useContext } from 'react'
 import WorkoutPlanner from 'components/Common/WorkoutPlanner/WorkoutPlanner'
 import { WorkoutDataContext } from 'contexts/WorkoutDataContext'
 import { createNewDefaultWorkout } from 'utils/createDefaults'
+import Spinner from 'react-bootstrap/Spinner'
 
 function BuildWorkout(props) {
-  const {workoutData, setWorkoutData} = useContext(WorkoutDataContext)
-  const newDefault = () => createNewDefaultWorkout(workoutData['workouts'])
+  const { workoutData, errors, mutate } = useContext(WorkoutDataContext)
+  const newDefault = createNewDefaultWorkout(workoutData)
+
+  if (!!errors) return <h1>Something went wrong</h1>
+  if (!workoutData) {
+    return <div className='text-center'><Spinner animation='border'/></div>
+  }
 
   return(
     <div>
       <WorkoutPlanner
-        workoutData={workoutData}
-        setWorkoutData={setWorkoutData}
+        errors={errors}
+        mutate={mutate}
         workout={newDefault}
-        sections={[]}
-        movements={[]}
       />
     </div>
   )

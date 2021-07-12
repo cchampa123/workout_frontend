@@ -13,3 +13,4 @@ export const user = 'user'
 export const buyin_number = 1
 export const buyout_number = 28
 export const order = 'order'
+export const movement_set = 'movementinstance_set'
