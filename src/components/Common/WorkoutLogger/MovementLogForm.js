@@ -31,7 +31,6 @@ function MovementLogForm(props) {
         {}
     :
     {}
-  console.log(errors)
   const buttonText = () => {
     if (relevantScore===count) {
       return props.movementData[score_time]==='00:00:00'?'Untimed':props.movementData[score_time]
@@ -93,7 +92,7 @@ function MovementLogForm(props) {
           }
         </Modal.Header>
           {
-            relevantScore===count?changeTime():changeReps
+            relevantScore===count?changeTime:changeReps
           }
         <Modal.Footer>
           <Button onClick={()=>setShow(false)} className='col-12'>Close</Button>
