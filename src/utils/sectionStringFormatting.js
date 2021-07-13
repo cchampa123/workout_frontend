@@ -11,7 +11,9 @@ import {
   count as movement_count,
   count_type as movement_count_type,
   score_type as movement_score_type,
-  score_number as movement_score_number
+  score_time as movement_score_time,
+  score_number as movement_score_number,
+  superset
 } from 'constants/movement'
 
 const mapping = {
@@ -34,6 +36,49 @@ const inverse_mapping = Object.entries(mapping).reduce((accumulator, currentValu
   accumulator[value]=key
   return accumulator
 }, {})
+
+function getSingleMovementDescriptionObject(relevantMovements, movementName) {
+  const movementDescriptionList = []
+  const theseMovements = relevantMovements.filter(x=>x[movement_name]===movementName)
+  const uniqueCounts = new Set(theseMovements.map(x=>x[movement_count]))
+  for (const uniqueCount of uniqueCounts) {
+    const relevantMovements = theseMovements.filter(x=>x[movement_count]===uniqueCount)
+    const numSets = relevantMovements.length
+    const scores = relevantMovements.map(x=>x[movement_score_time]==='00:00:00'?x[movement_score_number]:x[movement_score_time])
+    movementDescriptionList.push({
+      numSets: numSets,
+      count: uniqueCount,
+      scores: scores,
+      score_type: formatDataStrings(theseMovements[0][movement_score_type]),
+      count_type: theseMovements[0][movement_count_type],
+    })
+  }
+  return movementDescriptionList
+}
+
+function getSingleSuperSetDescriptionObject(superSet, movements) {
+  const superSetDescriptionList = []
+  const relevantMovements = movements.filter(x=>x[superset]===superSet)
+  const uniqueMovementNames = new Set(relevantMovements.map(x=>x[movement_name]))
+  for (const movementName of uniqueMovementNames) {
+    const movementDescription = getSingleMovementDescriptionObject(relevantMovements, movementName)
+    superSetDescriptionList.push({
+      totalSets: movementDescription.map(x=>x.numSets).reduce((a,b)=>a+b,0),
+      movement: movementName,
+      movementDescription: movementDescription
+    })
+  }
+  return superSetDescriptionList
+}
+
+export function getSectionSummaryObject(movements) {
+  const descriptionList = []
+  const uniqueSuperSets = new Set(movements.map(x=>x[superset]))
+  for (const superSet of uniqueSuperSets) {
+    descriptionList.push(getSingleSuperSetDescriptionObject(superSet, movements))
+  }
+  return descriptionList
+}
 
 export function formatDataStrings(section_type) {
   return mapping[section_type]
