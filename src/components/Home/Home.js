@@ -43,6 +43,7 @@ function Home() {
           <WorkoutSummary
             key={x[id]}
             workout={x}
+            dateHeader
           />
         )}
       </div>
@@ -52,6 +53,7 @@ function Home() {
         <WorkoutSummary
           key={x[id]}
           workout={x}
+          dateHeader
         />
       )}
       </div>

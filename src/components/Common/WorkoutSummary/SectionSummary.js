@@ -18,20 +18,13 @@ function SectionSummary(props) {
 
  const sectionSummaryObject = getSectionSummaryObject(movements)
 
-//Superset:
-//4 sets total:
-// - 3 sets 8 rep back squats @ 1, 2, 3
-// - 1 set 6 rep back squats @ 4
-//4 sets:
-// - 15 asdf
-
   const singleMovementFormat = (singleMovement, movementType) => {
     if (singleMovement.length===1) {
       console.log(singleMovement)
       const movement = singleMovement[0]
       const scores = movement.scores.filter(x=>x===null).length>0?null:'@ '+movement.scores.join(', ')+' '+movement.score_type
       return (
-        <div>{movement.numSets} sets {movement[count]} {movement[count_type]} {scores} {movementType}</div>
+        <div>{movement.numSets} sets {movement[count]} {movement[count_type]} {movementType} {scores} </div>
       )
     } else {
       return (
