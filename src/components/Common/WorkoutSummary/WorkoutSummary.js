@@ -8,10 +8,7 @@ import {
   section_set
 } from 'constants/workout'
 import {
-  section_id as movement_section_id
-} from 'constants/movement'
-import {
-  id as section_section_id
+  order as section_order
 } from 'constants/section'
 import moment from 'moment'
 
@@ -38,7 +35,7 @@ function WorkoutSummary(props) {
       <Card>
         {props.workout[section_set].map(section=>
           <SectionSummary
-            key={section[section_section_id]}
+            key={section[section_order]}
             sectionData={section}
           />
         )}

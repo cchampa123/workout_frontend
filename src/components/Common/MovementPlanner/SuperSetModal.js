@@ -5,7 +5,7 @@ import Row from 'react-bootstrap/Row'
 
 import { buyin_number, buyout_number } from 'constants/section'
 import { convertSuperSetToLetter } from 'utils/stringfunctions'
-import { superset as movement_superset, id as movement_id } from 'constants/movement'
+import { superset as movement_superset } from 'constants/movement'
 import { name } from 'constants/movement_class'
 
 function SuperSetModal(props) {

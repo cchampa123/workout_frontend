@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
-import NumPad from 'components/Common/NumPad'
 import TimePicker from 'components/Common/TimePicker'
 import Dropdown from 'react-bootstrap/Dropdown'
 import FakeForm from './FakeForm'

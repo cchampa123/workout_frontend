@@ -1,12 +1,9 @@
 import React from 'react'
-import { sectionTitling, movementFormatting, getSectionSummaryObject } from 'utils/sectionStringFormatting'
+import { sectionTitling, getSectionSummaryObject } from 'utils/sectionStringFormatting'
 import {
-  id as movement_instance_id,
-  movement_id as movement_type,
   order as movement_order,
   count_type,
-  count,
-  superset
+  count
 } from 'constants/movement'
 import { movement_set } from 'constants/section'
 

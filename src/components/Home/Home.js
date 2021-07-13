@@ -1,8 +1,7 @@
-import React, { useState, useContext, useEffect } from 'react'
-import Spinner from 'react-bootstrap/Spinner'
+import React, { useContext } from 'react'
 import { AuthContext } from 'contexts/AuthContext'
 import { WorkoutDataContext } from 'contexts/WorkoutDataContext'
-import { date as date_planned, complete, section_set, id } from 'constants/workout'
+import { date as date_planned, complete, id } from 'constants/workout'
 import WorkoutSummary from 'components/Common/WorkoutSummary/WorkoutSummary'
 import { FaUmbrellaBeach } from 'react-icons/fa'
 import moment from 'moment'
@@ -10,7 +9,7 @@ import moment from 'moment'
 function Home() {
 
   const user = useContext(AuthContext)
-  const { workoutData, error, mutate } = useContext(WorkoutDataContext)
+  const { workoutData } = useContext(WorkoutDataContext)
 
   const todayWorkouts = workoutData.filter(x=>
     moment(x[date_planned]).isSame(moment(), 'day') && x[complete] === false

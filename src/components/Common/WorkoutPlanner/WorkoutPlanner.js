@@ -1,42 +1,24 @@
 import React, { useState, useContext } from 'react'
 import Button from 'react-bootstrap/Button'
-import { PageContext } from 'contexts/PageContext'
 import Form from 'react-bootstrap/Form'
 import DateCard from './DateCard'
 import SubmissionConfirmation from 'components/Common/SubmissionConfirmation'
 import SectionPlanner from 'components/Common/SectionPlanner/SectionPlanner'
-
 import { MovementClassContext } from 'contexts/MovementClassContext'
 import { AuthContext } from 'contexts/AuthContext'
 import { createNewDefaultSection } from 'utils/createDefaults'
 import { validateWorkout } from 'utils/dataValidators'
-
 import { sendData } from 'utils/apiCalls'
-
-import { id as movement_movement_id, movement_id as movement_class_name } from 'constants/movement'
 import {
-  order as section_order,
-  rounds,
-  round_type,
-  round_duration,
-  section_type
+  order as section_order
 } from 'constants/section'
 import {
-  id as workout_id,
   date as planned_date,
-  complete as workout_complete,
   section_set
 } from 'constants/workout'
 
-import {
-  workoutPlannerSubmissionSuccess,
-  workoutPlannerSubmissionFailureNoMovements,
-  workoutPlannerSubmissionFailureEmptyMovements
-} from 'constants/strings'
-
 function WorkoutPlanner(props) {
 
-  const {setPage} = useContext(PageContext)
   const user = useContext(AuthContext)
   const [form, setForm] = useState(props.workout)
   const [showConfirmation, setShowConfirmation] = useState(false)
@@ -74,7 +56,7 @@ function WorkoutPlanner(props) {
   }
 
   const sectionErrors = !!formErrors[section_set]?formErrors[section_set]:{}
-  
+
   return(
     <MovementClassContext.Provider value={value}>
       <Form>

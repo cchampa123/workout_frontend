@@ -4,27 +4,16 @@ import SectionScreen from './SectionScreen'
 import Form from 'react-bootstrap/Form'
 import MovementLogForm from './MovementLogForm'
 import {
-  id as section_section_id,
   movement_set,
   order as section_order
 } from 'constants/section'
 import {
-  section_id as movement_section_id,
-  score_number,
-  score_type,
-  id as movement_movement_id,
-  count as movement_count,
   order as movement_order
 } from 'constants/movement'
 import {
   complete as workout_complete,
   section_set
 } from 'constants/workout'
-import {
-  workoutLoggerUnfinishedMovements,
-  workoutLoggerNetworkError,
-  workoutLoggerSubmissionSuccess
-} from 'constants/strings'
 import SubmissionConfirmation from 'components/Common/SubmissionConfirmation'
 import { validateWorkout } from 'utils/dataValidators'
 import { sendData } from 'utils/apiCalls'
@@ -55,9 +44,7 @@ function WorkoutLogger(props) {
       setActiveSection(newSection)
     }
   }
-
-  const handleSubmit = () => console.log('submitted!')
-
+  
   const updatedSectionData = (newData) => {
     const newSectionData = []
     let iterator = 0

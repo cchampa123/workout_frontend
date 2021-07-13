@@ -8,7 +8,6 @@ import TimePicker from 'components/Common/TimePicker'
 import { sectionTitling, formatDataStrings, unformatDataStrings } from 'utils/sectionStringFormatting'
 
 import {
-  id as section_id,
   rounds,
   round_type,
   round_types,

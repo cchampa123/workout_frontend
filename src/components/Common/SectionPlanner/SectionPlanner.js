@@ -8,12 +8,10 @@ import Col from 'react-bootstrap/Col'
 
 import {
   id as movement_id,
-  section_id as movement_section_id,
   order as movement_order
 } from 'constants/movement'
 
 import {
-  id as section_section_id,
   section_type,
   movement_set
 } from 'constants/section'

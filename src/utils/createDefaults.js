@@ -1,6 +1,4 @@
 import {
-  id as section_section_id,
-  workout_id as section_workout_id,
   section_type as section_section_type,
   rounds as section_rounds,
   round_duration as section_round_duration,
@@ -13,10 +11,7 @@ import {
 } from 'constants/section'
 
 import {
-  id as movement_movement_id,
   movement_id as movement_movement_class_id,
-  section_id as movement_section_id,
-  workout_id as movement_workout_id,
   count_type as movement_count_type,
   score_type as movement_score_type,
   count as movement_count,
@@ -27,7 +22,6 @@ import {
 } from 'constants/movement'
 
 import {
-  id as workout_workout_id,
   date as workout_date,
   complete as workout_complete,
   section_set
@@ -40,15 +34,6 @@ import {
 } from 'constants/movement_class'
 
 export function createNewDefaultWorkout(workoutData) {
-
-  const workout_ids = workoutData.map(x=>x[workout_workout_id])
-  const max_workout_number = workout_ids.filter(x=>typeof x==='number').length>0
-    ?
-      Math.max(...workout_ids.filter(x=>typeof x==='number'))
-    :
-      0
-  const num_new_workouts = workout_ids.filter(x=>typeof x === 'string').length
-  const new_workout_id = 'new_'+String(max_workout_number+num_new_workouts)
 
   const newWorkout = {
     [workout_date]:new Date(),

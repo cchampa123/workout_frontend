@@ -11,12 +11,6 @@ import {
   date as date_planned,
   complete
 } from 'constants/workout'
-import {
-  workout_id as section_workout_id
-} from 'constants/section'
-import {
-  workout_id as movement_workout_id
-} from 'constants/movement'
 
 function LogWorkout(props) {
 

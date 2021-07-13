@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import Container from 'react-bootstrap/Container'
 import Spinner from 'react-bootstrap/Spinner'
 import MainMenu from './Navbar/MainMenu'
@@ -9,12 +9,8 @@ import { AuthContext } from 'contexts/AuthContext'
 import { WorkoutDataContext } from 'contexts/WorkoutDataContext'
 import { PageContext } from 'contexts/PageContext'
 import { LOCAL_DATE_RANGE } from 'constants/configs'
-import { submitNewData, getData } from 'utils/apiCalls'
+import { getData } from 'utils/apiCalls'
 import moment from 'moment'
-import { date as date_planned, id as workout_workout_id } from 'constants/workout'
-import { workout_id as section_workout_id } from 'constants/section'
-import { workout_id as movement_workout_id } from 'constants/movement'
-import axios from 'axios'
 import useSWR from 'swr'
 
 function AuthenticatedApp(props) {

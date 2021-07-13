@@ -1,24 +1,16 @@
 import {
   movement_id,
-  count_type,
   score_type as movement_score_type,
   count,
   score_number as movement_score_number,
-  score_time as movement_score_time,
-  superset,
   order as movement_order
 } from 'constants/movement'
 
 import {
   section_type,
-  score_number as section_score_number,
-  score_time as section_score_time,
   rounds,
   round_duration,
   round_type,
-  extra_instructions,
-  buyin_number,
-  buyout_number,
   order as section_order,
   movement_set
 } from 'constants/section'

@@ -6,7 +6,6 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import TimePicker from 'components/Common/TimePicker'
 import {
-  id,
   movement_id as movement_name,
   count,
   count_type,
@@ -17,7 +16,6 @@ import {
 } from 'constants/movement'
 import { movement_set } from 'constants/section'
 import { formatDataStrings } from 'utils/sectionStringFormatting'
-import { formatTwoDigitsTime } from 'utils/stringfunctions'
 
 function MovementLogForm(props) {
 
