@@ -17,7 +17,6 @@ function SectionSummary(props) {
 
   const singleMovementFormat = (singleMovement, movementType) => {
     if (singleMovement.length===1) {
-      console.log(singleMovement)
       const movement = singleMovement[0]
       const scores = movement.scores.filter(x=>x===null).length>0?null:'@ '+movement.scores.join(', ')+' '+movement.score_type
       return (

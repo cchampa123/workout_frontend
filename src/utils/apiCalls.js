@@ -38,126 +38,14 @@ export function sendData(key, token, data) {
   }
 }
 
-function add_or_update(token, id, data, endpoint) {
-  if (data === null && typeof id !== 'string') {
-    axios.delete(
-      API_URL+endpoint+id+'/', {headers:{'Authorization':`Token ${token}`}}
-    )
-  } else if (typeof id === 'string') {
-    return (
-      axios.post(
-        API_URL+endpoint, data, {headers:{'Authorization':`Token ${token}`}}
-      )
-    )
-  } else {
-    return (
-      axios.put(
-        API_URL+endpoint+id+'/', data, {headers:{'Authorization':`Token ${token}`}}
-      )
-    )
-  }
+export async function updateData(key, token, data) {
+  const response = await axios.put(API_URL+key, data, {headers:{'Authorization':`Token ${token}`}})
+  return response.data
 }
 
-export async function submitNewData(token, workoutData, newWorkoutData, noUpdate) {
-  const errors = []
-
-  const newWorkoutIds = newWorkoutData['workouts'].map(x=>x[workout_workout_id])
-  const untouchedWorkouts = workoutData['workouts'].filter(workout =>
-    !newWorkoutIds.includes(workout[workout_workout_id])
-  )
-
-  const newSectionIds = newWorkoutData['sections'].map(x=>x[section_section_id])
-  const untouchedSections = workoutData['sections'].filter(section =>
-    !newSectionIds.includes(section[section_section_id])
-  )
-
-  const newMovementIds = newWorkoutData['movements'].map(x=>x[movement_movement_id])
-  const untouchedMovements = workoutData['movements'].filter(movement =>
-    !newMovementIds.includes(movement[movement_movement_id])
-  )
-
-  if (noUpdate) {
-    return ([
-      errors,
-      {
-      'workouts':[...untouchedWorkouts, ...newWorkoutData['workouts']],
-      'sections':[...untouchedSections, ...newWorkoutData['sections']],
-      'movements':[...untouchedMovements, ...newWorkoutData['movements']]
-    }])
-  }
-
-  const newWorkouts = await Promise.all(
-    newWorkoutData['workouts'].map(
-      async x => {
-        const {id} = x
-        const submit_package = {
-          ...x,
-          [date_planned]:moment(x[date_planned]).format('YYYY-MM-DD')
-        }
-        try {
-          let response = await add_or_update(token, id, submit_package, 'workout/')
-          return response.data
-        } catch (error) {
-          errors.push(error.response.data)
-          return x
-        }
-      }
-    )
-  )
-  const workoutIdMap = newWorkouts.reduce((acc, current, index) => {
-    acc[newWorkoutData['workouts'][index][workout_workout_id]] = current[workout_workout_id]
-    return acc
-  }, {})
-
-  const newSections = await Promise.all(
-    newWorkoutData['sections'].map(
-      async x=>{
-        const {id} = x
-        const submit_package = {
-          ...x,
-          [section_workout_id]:workoutIdMap[x[section_workout_id]]
-        }
-        try {
-          let response = await add_or_update(token, id, submit_package, 'section/')
-          return response.data
-        } catch (error) {
-          errors.push(error.response.data)
-          return x
-        }
-      }
-    )
-  )
-  const sectionIdMap = newSections.reduce((acc, current, index) => {
-    acc[newWorkoutData['sections'][index][section_section_id]] = current[section_section_id]
-    return acc
-  }, {})
-
-  const newMovements = await Promise.all(
-    newWorkoutData['movements'].map(
-      async x=>{
-        const {id} = x
-        const submit_package = {
-          ...x,
-          [movement_section_id]:sectionIdMap[x[movement_section_id]],
-          [movement_workout_id]:workoutIdMap[x[movement_workout_id]]
-        }
-        try {
-          let response = await add_or_update(token, id, submit_package, 'movement_instance/')
-          return response.data
-        } catch (error) {
-          errors.push(error.response.data)
-          return x
-        }
-      }
-    )
-  )
-  return ([
-    errors,
-    {
-    'workouts':[...untouchedWorkouts, ...newWorkouts],
-    'sections':[...untouchedSections, ...newSections],
-    'movements':[...untouchedMovements, ...newMovements]
-  }])
+export async function getMovementClasses(key, token) {
+  const movementClasses = await axios.get(API_URL+key, {headers:{'Authorization':`Token ${token}`}})
+  return movementClasses.data
 }
 
 export async function getFilteredMovementClasses(token, query) {

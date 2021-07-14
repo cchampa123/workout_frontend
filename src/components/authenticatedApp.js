@@ -5,6 +5,7 @@ import MainMenu from './Navbar/MainMenu'
 import Home from './Home/Home'
 import BuildWorkout from './BuildWorkout/BuildWorkout'
 import LogWorkout from './LogWorkout/LogWorkout'
+import Explorer from './Explorer/Explorer'
 import { AuthContext } from 'contexts/AuthContext'
 import { WorkoutDataContext } from 'contexts/WorkoutDataContext'
 import { PageContext } from 'contexts/PageContext'
@@ -32,7 +33,8 @@ function AuthenticatedApp(props) {
   const pages = {
     'Home': Home,
     'Plan Workout' : BuildWorkout,
-    'Log Workout': LogWorkout
+    'Log Workout': LogWorkout,
+    'Results Explorer': Explorer
   }
 
   if (!!error) {
