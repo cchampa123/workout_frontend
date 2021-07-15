@@ -6,7 +6,7 @@ import Spinner from 'react-bootstrap/Spinner'
 
 function BuildWorkout(props) {
   const { workoutData, errors, mutate } = useContext(WorkoutDataContext)
-  const newDefault = createNewDefaultWorkout(workoutData)
+  const newDefault = createNewDefaultWorkout()
 
   if (!!errors) return <h1>Something went wrong</h1>
   if (!workoutData) {

@@ -35,7 +35,7 @@ function LogWorkout(props) {
       <WorkoutPlanner
         errors={errors}
         mutate={mutate}
-        workout={createNewDefaultWorkout(workoutData)}
+        workout={createNewDefaultWorkout(true)}
       />
     )
   } else {

@@ -33,11 +33,11 @@ import {
   score_types as movement_class_score_type
 } from 'constants/movement_class'
 
-export function createNewDefaultWorkout(workoutData) {
+export function createNewDefaultWorkout(complete=false) {
 
   const newWorkout = {
     [workout_date]:new Date(),
-    [workout_complete]:false,
+    [workout_complete]:complete,
     [section_set]:[]
   }
 
@@ -54,7 +54,7 @@ export function createNewDefaultSection(sectionData) {
     [section_round_duration]:'00:00:00',
     [section_round_type]:'F',
     [section_score_number]:null,
-    [section_score_time]:'',
+    [section_score_time]:'00:00:00',
     [section_extra_instructions]:'',
     [section_order]:order,
     [movement_set]: []

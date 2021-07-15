@@ -1,4 +1,4 @@
-import React from 'react'
+import {useState} from 'react'
 import Card from 'react-bootstrap/Card'
 import SectionDetail from './SectionDetail'
 import Button from 'react-bootstrap/Button'
@@ -25,6 +25,7 @@ import { createNewDefaultMovement } from 'utils/createDefaults'
 
 function SectionPlanner(props) {
 
+  const [addScore, setAddScore] = useState(false)
   const sortedMovementData = (newData, movementToUpdate) => {
     const newMovementData = newData ?
       [...props.sectionData[movement_set].filter(
@@ -103,7 +104,13 @@ function SectionPlanner(props) {
         {props.sectionData[section_type]==='S'?null:
           <Row className='m-1'>
             <Col>
-              {sectionScoreInput}
+              <Button
+                onClick={()=>setAddScore(!addScore)}
+                className='col-12'
+              >
+                {!addScore?'Add Section Score':'Fill in Score Later'}
+              </Button>
+              {addScore?sectionScoreInput:null}
             </Col>
           </Row>
         }
