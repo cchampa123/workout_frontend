@@ -36,6 +36,7 @@ function MovementHistory(props) {
   useEffect(() => {
     async function fetchSelectedData() {
       setCountLoading(true)
+      setSelectedCount({})
       const data = await getData(
         'movement_instance/',
         user.token,
@@ -47,7 +48,7 @@ function MovementHistory(props) {
       setCountLoading(false)
     }
     fetchSelectedData()
-  }, [props.movement[name], selectedCount[count], selectedCount[count_type]])
+  }, [props.movement[name]])
 
   const optionMap = countOptions.length === 0 ? <div>No results yet</div> :
     <>
@@ -77,12 +78,17 @@ function MovementHistory(props) {
 
    const chart = () => {
      if (!!selectedCount[count]) {
+       const chartData = selectedData.map(x=>{
+         return ({...x, date: moment(x.date).valueOf()})
+       })
        return (
          <ResponsiveContainer width={'99%'} aspect={1.5}>
-           <LineChart data={selectedData} margin={{ top: 5, right: 30, left: 10, bottom: 5 }}>
+           <LineChart data={chartData} margin={{ top: 5, right: 30, left: 10, bottom: 5 }}>
              <CartesianGrid stroke='#eee'/>
              <XAxis
                dataKey='date'
+               type='number'
+               domain={['auto', 'auto']}
                tickCount={5}
                tickFormatter={number => moment(number).format('M/D')}
              />
