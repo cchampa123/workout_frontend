@@ -6,7 +6,7 @@ import Spinner from 'react-bootstrap/Spinner'
 import {name} from 'constants/movement_class'
 import {getData} from 'utils/apiCalls'
 import {formatDataStrings} from 'utils/sectionStringFormatting'
-import {movement_id, count, count_type, score_number, score_time, id} from 'constants/movement'
+import {movement_id, count, count_type, score_number, score_time, score_type, id} from 'constants/movement'
 import {AuthContext} from 'contexts/AuthContext'
 import {LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer} from 'recharts'
 import moment from 'moment'
@@ -64,11 +64,10 @@ function MovementHistory(props) {
 
   const customTooltip = (e) => {
      if (e.active && e.payload != null && e.payload[0]!=null){
-       console.log(e.payload)
        return (
          <div className='card'>
-           <p>{moment(e.payload[0].payload['date']).format('MMM DD, YYYY')}</p>
-           <p>{e.payload[0].payload[score_number]}</p>
+           <div>{moment(e.payload[0].payload['date']).format('MMM DD, YYYY')}</div>
+           <div>{e.payload[0].payload[score_number]} {e.payload[0].payload[score_type]}</div>
          </div>
        )
      } else {
@@ -76,15 +75,37 @@ function MovementHistory(props) {
      }
    }
 
+   const chart = () => {
+     if (!!selectedCount[count]) {
+       return (
+         <ResponsiveContainer width={'99%'} aspect={1.5}>
+           <LineChart data={selectedData} margin={{ top: 5, right: 30, left: 10, bottom: 5 }}>
+             <CartesianGrid stroke='#eee'/>
+             <XAxis
+               dataKey='date'
+               tickCount={5}
+               tickFormatter={number => moment(number).format('M/D')}
+             />
+             <YAxis domain={['auto', 'auto']}/>
+             <Tooltip content={customTooltip}/>
+             <Line dataKey={score_number} type="monotone" stroke="#8884d8"/>
+           </LineChart>
+         </ResponsiveContainer>
+       )
+     } else {
+       return <div/>
+     }
+   }
+
   return(
     <Card className='my-2'>
       <Card.Header>
-        Results over time
+        <h5>Progression</h5>
       </Card.Header>
       <Card.Body>
       <Dropdown>
         <Dropdown.Toggle className='col-12'>
-          {!!selectedCount[count]?<div>{selectedCount[count]} {formatDataStrings(selectedCount[count_type])}</div> :'Select a result'}
+          {!!selectedCount[count]?`${selectedCount[count]} ${formatDataStrings(selectedCount[count_type])}` :'Select a result'}
         </Dropdown.Toggle>
         <Dropdown.Menu className='col-12'>
           {loading?
@@ -93,21 +114,9 @@ function MovementHistory(props) {
           }
         </Dropdown.Menu>
       </Dropdown>
-        {countLoading?<div className='text-center'><Spinner animation='border'/></div>:
-        <ResponsiveContainer width={'99%'} aspect={1.5}>
-          <LineChart data={selectedData} margin={{ top: 5, right: 30, left: 10, bottom: 5 }}>
-            <CartesianGrid stroke='#eee'/>
-            <XAxis
-              dataKey='date'
-              tickCount={5}
-              tickFormatter={number => moment(number).format('M/D')}
-            />
-            <YAxis />
-            <Tooltip content={customTooltip}/>
-            <Line dataKey={score_number} type="monotone" stroke="#8884d8"/>
-          </LineChart>
-        </ResponsiveContainer>
-        }
+        <div className='my-3'>
+        {countLoading?<div className='text-center'><Spinner animation='border'/></div>:chart()}
+        </div>
       </Card.Body>
 
     </Card>

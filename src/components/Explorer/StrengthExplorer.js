@@ -32,12 +32,12 @@ function StrengthExplorer(props) {
 
   const selectedMovement = selectedMovementName===null?null:movementClassData.filter(x=>x[name]===selectedMovementName)[0]
   return (
-    <>
+    <div style={{'margin-bottom':'60px'}}>
       <Dropdown>
         <Dropdown.Toggle className='col-12 btn-info text-dark'>
-          <h5>{selectedMovementName?selectedMovementName:'Select a movement'}</h5>
+          {selectedMovementName?selectedMovementName:'Select a movement'}
         </Dropdown.Toggle>
-        <Dropdown.Menu className='col-12'>
+        <Dropdown.Menu className='col-12' style={{'height':'300px', 'overflow-y':'scroll'}}>
           {movementClassData.map(x=>
             <Dropdown.Item
               key={x[name]}
@@ -61,7 +61,7 @@ function StrengthExplorer(props) {
         :
         null
       }
-    </>
+    </div>
   )
 }
 
