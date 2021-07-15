@@ -3,8 +3,10 @@ import Card from 'react-bootstrap/Card'
 import SectionDetail from './SectionDetail'
 import Button from 'react-bootstrap/Button'
 import MovementItem from 'components/Common/MovementPlanner/MovementItem'
+import TimePicker from 'components/Common/TimePicker'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Form from 'react-bootstrap/Form'
 
 import {
   id as movement_id,
@@ -13,7 +15,10 @@ import {
 
 import {
   section_type,
-  movement_set
+  movement_set,
+  round_type,
+  score_number,
+  score_time
 } from 'constants/section'
 
 import { createNewDefaultMovement } from 'utils/createDefaults'
@@ -36,6 +41,25 @@ function SectionPlanner(props) {
   }
 
   const movementErrors = !!props.errors[movement_set]?props.errors[movement_set]:{}
+
+  const sectionScoreInput = props.sectionData[round_type]!=='F'?
+    <Form.Group>
+      <Form.Label>Score</Form.Label>
+      <Form.Control
+        type='input'
+        value={props.sectionData[score_number]}
+        onChange={e=>props.setForm({...props.sectionData, [score_number]:e.target.value})}
+        placeholder='Score'
+      />
+    </Form.Group>
+    :
+    <>
+    Score
+    <TimePicker
+      scoreTime={props.sectionData[score_time]}
+      onSelect={e=>props.setForm({...props.sectionData, [score_time]:e})}
+    />
+    </>
 
   return(
     <Card className='my-1 bg-light'>
@@ -76,6 +100,13 @@ function SectionPlanner(props) {
             </Button>
           </Col>
         </Row>
+        {props.sectionData[section_type]==='S'?null:
+          <Row className='m-1'>
+            <Col>
+              {sectionScoreInput}
+            </Col>
+          </Row>
+        }
     </Card>
   )
 }

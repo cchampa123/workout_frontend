@@ -14,7 +14,7 @@ function TimePicker(props) {
     <Form onSubmit={(e)=>e.preventDefault()}>
       <Row>
         <Col>
-          <Form.Label>Hours</Form.Label>
+          <Form.Label className='m-0'>Hours</Form.Label>
           <Form.Control
             as='select'
             value={Number(hours)}
@@ -28,7 +28,7 @@ function TimePicker(props) {
           </Form.Control>
         </Col>
         <Col>
-          <Form.Label>Minutes</Form.Label>
+          <Form.Label className='m-0'>Minutes</Form.Label>
           <Form.Control
             as='select'
             value={Number(minutes)}
@@ -42,7 +42,7 @@ function TimePicker(props) {
           </Form.Control>
         </Col>
         <Col>
-          <Form.Label>Seconds</Form.Label>
+          <Form.Label className='m-0'>Seconds</Form.Label>
           <Form.Control
             as='select'
             value={Number(seconds)}
