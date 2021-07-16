@@ -1,4 +1,5 @@
 import {useState, useEffect, useContext} from 'react'
+import useSWR from 'swr'
 import {AuthContext} from 'contexts/AuthContext'
 import {getData} from 'utils/apiCalls'
 import {movement_id, score_type, score_number, score_time, count, count_type} from 'constants/movement'
@@ -11,60 +12,78 @@ import Col from 'react-bootstrap/Col'
 function MovementPbs(props) {
 
   const user = useContext(AuthContext)
-  const [pbs, setPbs] = useState([])
-  const [pbLoading, setPbLoading] = useState(true)
-  useEffect(() => {
-    async function fetchPbs() {
-      setPbLoading(true)
-      const data = await getData(
-        'movement_instance/',
-        user.token,
-        {[movement_id]:props.movement[name],
-         'max_score':true}
-      )
-      setPbs(data)
-      setPbLoading(false)
-    }
-    fetchPbs()
-  }, [props.movement[name]])
+  const {data:pbs, error:pbsError} = useSWR(
+    [`movement_class/${props.movement[name]}/max_score/`, user.token],
+    (key, token) => getData(key, token)
+  )
 
-  const pbTable = () => {
-    if (pbLoading) {
-      return <div className='text-center'><Spinner animation='border'/></div>
-    } else {
-      const nonTime = pbs.filter(x=>x[score_type]!=='time')
-      nonTime.sort((a,b) => a[count]>b[count]?1:-1)
-      const time = pbs.filter(x=>x[score_type]==='time')
-      return (
-        <>
-        {!nonTime?null:
-          <>
+  if (pbsError) return (
+    <Card>
+      <Card.Header><h5>Personal Bests</h5></Card.Header>
+      <Card.Body>Something went wrong...</Card.Body>
+    </Card>
+  )
+
+  if (!pbs) return (
+    <Card>
+      <Card.Header><h5>Personal Bests</h5></Card.Header>
+      <Card.Body><div className='text-center'><Spinner animation='border'/></div></Card.Body>
+    </Card>
+  )
+
+  const pbTablePounds = () => {
+    const poundStats = pbs.lbs
+    if (poundStats.length === 0) return null
+    poundStats.sort((a,b) => a[count]>b[count]?1:-1)
+    return (
+      <>
+      <Row>
+        <Col className='text-center'><strong>Count</strong></Col>
+        <Col className='text-center'><strong>Weight</strong></Col>
+      </Row>
+      {
+        poundStats.map(x=>
           <Row>
-            <Col className='text-center'><strong>Count</strong></Col>
-            <Col className='text-center'><strong>Weight</strong></Col>
-            <Col className='text-center'><strong>Measurement</strong></Col>
+            <Col className='text-center border'>
+              {x[count]} {x[count_type]}
+            </Col>
+            <Col className='text-center border'>
+              {x[score_number]} lbs
+            </Col>
           </Row>
-          {
-            nonTime.map(x=>
-              <Row>
-                <Col className='text-center border'>
-                  {x[count]} {x[count_type]}
-                </Col>
-                <Col className='text-center border'>
-                  {x[score_number]}
-                </Col>
-                <Col className='text-center border'>
-                  {x[score_type]}
-                </Col>
-              </Row>
-            )
-          }
-          </>
-        }
-        </>
-      )
-    }
+        )
+      }
+      </>
+    )
   }
+
+  const pbTableTime = () => {
+    const timeStats = pbs.time
+    if (timeStats.length===0) return null
+    timeStats.sort((a,b) => a[count]>b[count]?1:-1)
+    return (
+      <>
+      <Row>
+        <Col className='text-center'><strong>Count</strong></Col>
+        <Col className='text-center'><strong>Time</strong></Col>
+      </Row>
+      {timeStats.map(x=>
+          <Row>
+            <Col className='text-center border'>
+              {x[count]} {x[count_type]}
+            </Col>
+            <Col className='text-center border'>
+              {new Date(x[score_time]*1000).toISOString().substr(12,7)}
+            </Col>
+          </Row>
+        )
+      }
+      </>
+    )
+  }
+
+  const table1 = pbTablePounds()
+  const table2 = pbTableTime()
 
   return (
     <Card className='my-2'>
@@ -72,7 +91,7 @@ function MovementPbs(props) {
         <h5>Personal Bests</h5>
       </Card.Header>
       <Card.Body>
-        {pbTable()}
+        {!table1 && !table2? null : <div><div>{table1}</div><div>{table2}</div></div>}
       </Card.Body>
     </Card>
   )

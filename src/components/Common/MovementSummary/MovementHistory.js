@@ -8,49 +8,39 @@ import {getData} from 'utils/apiCalls'
 import {formatDataStrings} from 'utils/sectionStringFormatting'
 import {movement_id, count, count_type, score_number, score_time, score_type, id} from 'constants/movement'
 import {AuthContext} from 'contexts/AuthContext'
-import {LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer} from 'recharts'
-import moment from 'moment'
+import DateChart from 'components/Common/DateChart'
 
 function MovementHistory(props) {
 
-  const user = useContext(AuthContext)
-  const [loading, setLoading] = useState(false)
-  const [countOptions, setCountOptions] = useState([])
-  useEffect(() => {
-    async function fetchOptions() {
-      setLoading(true)
-      const data = await getData(
-        'movement_instance/',
-        user.token,
-        {[movement_id]:props.movement[name], 'unique_counts':true}
-      )
-      setCountOptions(data)
-      setLoading(false)
-    }
-    fetchOptions()
-  }, [props.movement[name]])
-
   const [selectedCount, setSelectedCount] = useState({})
-  const [countLoading, setCountLoading] = useState(false)
-  const [selectedData, setSelectedData] = useState([])
-  useEffect(() => {
-    async function fetchSelectedData() {
-      setCountLoading(true)
-      setSelectedCount({})
-      const data = await getData(
-        'movement_instance/',
-        user.token,
-        {[movement_id]:props.movement[name],
-         [count]:selectedCount[count],
-         [count_type]:selectedCount[count_type]}
-      )
-      setSelectedData(data)
-      setCountLoading(false)
-    }
-    fetchSelectedData()
-  }, [props.movement[name]])
+  useEffect(()=>{setSelectedCount({})}, [props.movement[name]])
 
-  const optionMap = countOptions.length === 0 ? <div>No results yet</div> :
+  const user = useContext(AuthContext)
+  const {data:countOptions, error:countOptionsError} = useSWR(
+    [`movement_class/${props.movement[name]}/unique_counts/`, user.token],
+    (key, token) => getData(key, token, {})
+  )
+
+  const {data:progressionData, error:progressionDataError} = useSWR(
+    [`movement_class/${props.movement[name]}/progression/`, user.token],
+    (key, token) => getData(key, token, {})
+  )
+
+  if (progressionDataError||countOptionsError) return (
+    <Card>
+      <Card.Header>Progression</Card.Header>
+      <Card.Body><h5>Something went wrong...</h5></Card.Body>
+    </Card>
+  )
+
+  if (!progressionData||!countOptions) return (
+    <Card>
+      <Card.Header><h5>Progression</h5></Card.Header>
+      <Card.Body><div className='text-center'><Spinner animation='border'/></div></Card.Body>
+    </Card>
+  )
+
+  const optionMap = countOptions.length===0 ? <div>No results yet</div> :
     <>
     {countOptions.map(x=>
       <Dropdown.Item
@@ -63,46 +53,6 @@ function MovementHistory(props) {
     )}
     </>
 
-  const customTooltip = (e) => {
-     if (e.active && e.payload != null && e.payload[0]!=null){
-       return (
-         <div className='card'>
-           <div>{moment(e.payload[0].payload['date']).format('MMM DD, YYYY')}</div>
-           <div>{e.payload[0].payload[score_number]} {e.payload[0].payload[score_type]}</div>
-         </div>
-       )
-     } else {
-       return ""
-     }
-   }
-
-   const chart = () => {
-     if (!!selectedCount[count]) {
-       const chartData = selectedData.map(x=>{
-         return ({...x, date: moment(x.date).valueOf()})
-       })
-       return (
-         <ResponsiveContainer width={'99%'} aspect={1.5}>
-           <LineChart data={chartData} margin={{ top: 5, right: 30, left: 10, bottom: 5 }}>
-             <CartesianGrid stroke='#eee'/>
-             <XAxis
-               dataKey='date'
-               type='number'
-               domain={['auto', 'auto']}
-               tickCount={5}
-               tickFormatter={number => moment(number).format('M/D')}
-             />
-             <YAxis domain={['auto', 'auto']}/>
-             <Tooltip content={customTooltip}/>
-             <Line dataKey={score_number} type="monotone" stroke="#8884d8"/>
-           </LineChart>
-         </ResponsiveContainer>
-       )
-     } else {
-       return <div/>
-     }
-   }
-
   return(
     <Card className='my-2'>
       <Card.Header>
@@ -114,14 +64,19 @@ function MovementHistory(props) {
           {!!selectedCount[count]?`${selectedCount[count]} ${formatDataStrings(selectedCount[count_type])}` :'Select a result'}
         </Dropdown.Toggle>
         <Dropdown.Menu className='col-12'>
-          {loading?
-            <div className='text-center'><Spinner animation='border'/></div>:
-            optionMap
-          }
+          {optionMap}
         </Dropdown.Menu>
       </Dropdown>
         <div className='my-3'>
-        {countLoading?<div className='text-center'><Spinner animation='border'/></div>:chart()}
+        {!!selectedCount[count]?
+          <DateChart selectedData={progressionData.filter(x=>
+            x[count]===selectedCount[count] && x[count_type]===selectedCount[count_type]
+            )}
+            xAxis={'date'}
+            yAxis={selectedCount[score_type]!=='time'?score_number:score_time}
+          />
+          : null
+        }
         </div>
       </Card.Body>
 
