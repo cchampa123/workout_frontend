@@ -28,7 +28,8 @@ const mapping = {
   'calories':'Calories',
   'lbs':'Pounds',
   'kgs':'KGs',
-  'time':'Time'
+  'time':'Time',
+  'completion':'Completion'
 }
 
 const inverse_mapping = Object.entries(mapping).reduce((accumulator, currentValue) => {

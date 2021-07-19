@@ -33,6 +33,7 @@ function FakeForm(props) {
   return (
     <Button
       className='btn btn-info col-12 text-dark'
+      disabled={props.movementData[props.relevant_type_variable]==='completion'}
       style={{textTransform:'capitalize'}}
       onClick={()=>props.setShow(true)}>
         {number.concat(" ", word!==''?formatDataStrings(word):'')}

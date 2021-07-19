@@ -68,6 +68,7 @@ function MovementLogForm(props) {
           <Form.Control
             value={props.movementData[relevantScore]===null?'':props.movementData[relevantScore]}
             type='number'
+            disabled={props.movementData[score_type]==='completion'}
             onChange={e => props.setMovementData({...props.movementData, [relevantScore]:e.target.value})}
             placeholder={formatDataStrings(relevantScore===count?props.movementData[count_type]:props.movementData[score_type])}
             isInvalid={!!errors[relevantScore]}
