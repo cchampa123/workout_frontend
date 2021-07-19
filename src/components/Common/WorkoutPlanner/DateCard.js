@@ -24,7 +24,7 @@ function DateCard(props) {
         <Datepicker
           wrapperClassName='col-12'
           dateFormat="MMMM d, yyyy"
-          selected={props.plannedDate}
+          selected={new Date(`${props.plannedDate}T00:00:00`)}
           onChange={date => props.setPlannedDate(date)}
           customInput={<CustomInput/>}
           popperPlacement='auto'

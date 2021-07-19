@@ -6,14 +6,15 @@ import Spinner from 'react-bootstrap/Spinner'
 import {name} from 'constants/movement_class'
 import {getData} from 'utils/apiCalls'
 import {formatDataStrings} from 'utils/sectionStringFormatting'
-import {movement_id, count, count_type, score_number, score_time, score_type, id} from 'constants/movement'
+import {count, count_type, score_number, score_time, score_type} from 'constants/movement'
 import {AuthContext} from 'contexts/AuthContext'
 import DateChart from 'components/Common/DateChart'
 
 function MovementHistory(props) {
 
   const [selectedCount, setSelectedCount] = useState({})
-  useEffect(()=>{setSelectedCount({})}, [props.movement[name]])
+  const movementName = props.movement[name]
+  useEffect(()=>{setSelectedCount({})}, [movementName])
 
   const user = useContext(AuthContext)
   const {data:countOptions, error:countOptionsError} = useSWR(

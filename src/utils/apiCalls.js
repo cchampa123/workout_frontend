@@ -1,8 +1,6 @@
 import axios from 'axios'
 import { API_URL } from 'constants/configs'
 import { id as workout_workout_id, date as date_planned } from 'constants/workout'
-import { id as section_section_id, workout_id as section_workout_id } from 'constants/section'
-import { workout_id as movement_workout_id, section_id as movement_section_id, id as movement_movement_id } from 'constants/movement'
 import moment from 'moment'
 
 export async function getData(key, token, parameters) {

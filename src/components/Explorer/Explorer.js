@@ -1,4 +1,3 @@
-import Collapse from 'react-bootstrap/Collapse'
 import Accordion from 'react-bootstrap/Accordion'
 import Card from 'react-bootstrap/Card'
 import { useState } from 'react'

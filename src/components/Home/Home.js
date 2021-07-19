@@ -31,7 +31,7 @@ function Home() {
         <WorkoutSummary
           key={x[id]}
           workout={x}
-          goButton={true}
+          goButton
           dateHeader={false}
         />
       )}
@@ -53,6 +53,7 @@ function Home() {
           key={x[id]}
           workout={x}
           dateHeader
+          editButton
         />
       )}
       </div>

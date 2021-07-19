@@ -28,6 +28,16 @@ function WorkoutSummary(props) {
   const dateHeader = (
     <h5>{moment(props.workout[date_planned]).format('ddd MMM D')}</h5>
   )
+  const editButton = (
+    <Button
+      onClick={() => setPage(
+        {pageTitle:'Plan Workout', pageProps:{workoutData:props.workout}}
+      )}
+      className='btn-secondary col-12'
+    >
+      Edit
+    </Button>
+  )
 
   return (
     <div className='mb-2'>
@@ -41,6 +51,7 @@ function WorkoutSummary(props) {
         )}
       </Card>
       {props.goButton?goButton:<div/>}
+      {props.editButton?editButton:<div/>}
     </div>
   )
 }

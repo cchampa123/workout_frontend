@@ -1,4 +1,3 @@
-import useSWR from 'swr'
 import {useState, useContext, useEffect, useMemo} from 'react'
 import Button from 'react-bootstrap/Button'
 import Card from 'react-bootstrap/Card'
@@ -13,13 +12,13 @@ import {AuthContext} from 'contexts/AuthContext'
 
 function MovementClassSummary(props) {
 
-  const movement = useMemo(() => props.movement, [props.movement[name]])
+  const movementName = props.movement[name]
+  //eslint-disable-next-line
+  const movement = useMemo(() => props.movement, [movementName])
 
   const [open, setOpen] = useState(false)
   const [form, setForm] = useState({})
   useEffect(() => setForm(movement), [movement])
-  console.log(form)
-  const [loading, setLoading] = useState(false)
   const user = useContext(AuthContext)
 
   const handleSubmit = async () => {

@@ -1,5 +1,3 @@
-import useSWR from 'swr'
-import {name} from 'constants/movement_class'
 import MovementClassSummary from './MovementClassSummary'
 import MovementHistory from './MovementHistory'
 import MovementPbs from './MovementPbs'

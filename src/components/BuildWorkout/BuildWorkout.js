@@ -18,7 +18,7 @@ function BuildWorkout(props) {
       <WorkoutPlanner
         errors={errors}
         mutate={mutate}
-        workout={newDefault}
+        workout={props.workoutData?props.workoutData:newDefault}
       />
     </div>
   )

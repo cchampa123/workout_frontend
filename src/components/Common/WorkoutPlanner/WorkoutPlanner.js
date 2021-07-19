@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import DateCard from './DateCard'
@@ -8,9 +8,11 @@ import { MovementClassContext } from 'contexts/MovementClassContext'
 import { AuthContext } from 'contexts/AuthContext'
 import { createNewDefaultSection } from 'utils/createDefaults'
 import { validateWorkout } from 'utils/dataValidators'
-import { sendData } from 'utils/apiCalls'
+import { sendData, getData } from 'utils/apiCalls'
+import { movement_id } from 'constants/movement'
 import {
-  order as section_order
+  order as section_order,
+  movement_set
 } from 'constants/section'
 import {
   date as planned_date,
@@ -26,6 +28,15 @@ function WorkoutPlanner(props) {
   const [formErrors, setFormErrors] = useState({})
 
   const [movementClassData, setMovementClassData] = useState([])
+  useEffect(() => {
+    async function getMovementClasses() {
+      const allMovements = props.workout[section_set].map(x=>x[movement_set]).flat().map(x=>x[movement_id])
+      const data = await Promise.all(allMovements.map(x=>getData(`movement_class/${x}`, user.token, {})))
+      setMovementClassData(data)
+    }
+    getMovementClasses()
+    //eslint-disable-next-line
+  }, [])
   const value = { movementClassData, setMovementClassData }
 
   const sortedSectionData = (newData, sectionToUpdate) => {
