@@ -35,8 +35,13 @@ import {
 
 export function createNewDefaultWorkout(complete=false) {
 
+  const date = new Date()
+  const year = date.getFullYear()
+  const month = date.getMonth()
+  const day = date.getDate()
+
   const newWorkout = {
-    [workout_date]:new Date(),
+    [workout_date]:`${year}-${month>10?month:'0'+month}-${day>10?day:'0'+day}`,
     [workout_complete]:complete,
     [section_set]:[]
   }
