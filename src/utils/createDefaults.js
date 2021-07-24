@@ -33,15 +33,17 @@ import {
   score_types as movement_class_score_type
 } from 'constants/movement_class'
 
+import { formatTwoDigitsTime } from 'utils/stringfunctions'
+
 export function createNewDefaultWorkout(complete=false) {
 
   const date = new Date()
-  const year = date.getFullYear()
-  const month = date.getMonth()+1
-  const day = date.getDate()
+  const year = formatTwoDigitsTime(date.getFullYear())
+  const month = formatTwoDigitsTime(date.getMonth()+1)
+  const day = formatTwoDigitsTime(date.getDate())
 
   const newWorkout = {
-    [workout_date]:`${year}-${month>10?month:'0'+month}-${day>10?day:'0'+day}`,
+    [workout_date]:`${year}-${month}-${day}`,
     [workout_complete]:complete,
     [section_set]:[]
   }

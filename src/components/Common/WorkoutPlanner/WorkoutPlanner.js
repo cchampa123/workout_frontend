@@ -10,6 +10,7 @@ import { createNewDefaultSection } from 'utils/createDefaults'
 import { validateWorkout } from 'utils/dataValidators'
 import { sendData, getData } from 'utils/apiCalls'
 import { movement_id } from 'constants/movement'
+import { formatTwoDigitsTime } from 'utils/stringfunctions'
 import {
   order as section_order,
   movement_set
@@ -73,7 +74,7 @@ function WorkoutPlanner(props) {
       <Form>
         <DateCard
           plannedDate={form[planned_date]}
-          setPlannedDate={(date) => setForm({...form, [planned_date]:date})}
+          setPlannedDate={(date) => setForm({...form, [planned_date]:`${formatTwoDigitsTime(date.getFullYear())}-${formatTwoDigitsTime(date.getMonth()+1)}-${formatTwoDigitsTime(date.getDate())}`})}
         />
         {form[section_set].map(section =>
           <SectionPlanner
