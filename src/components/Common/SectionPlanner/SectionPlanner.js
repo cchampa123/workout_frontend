@@ -73,7 +73,7 @@ function SectionPlanner(props) {
         </Row>
         {props.sectionData[movement_set].map(movement =>
             <MovementItem
-              key={movement[movement_id]}
+              key={movement[movement_order]}
               movement={movement}
               setForm={movementData => props.setForm(
                 sortedMovementData(movementData, movement[movement_order])
@@ -91,9 +91,10 @@ function SectionPlanner(props) {
                 ...props.sectionData,
                 [movement_set]:[
                   ...props.sectionData[movement_set],
+                  props.sectionData[movement_set].length===0?
                   createNewDefaultMovement(
                     props.sectionData[movement_set]
-                  )
+                  ):{...props.sectionData[movement_set].slice(-1)[0], [movement_order]:props.sectionData[movement_set].slice(-1)[0][movement_order]+1}
                 ]
               })}
             >
