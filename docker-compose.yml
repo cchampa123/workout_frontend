@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+  frontend:
+    image: node:15.8.0
+    environment:
+      REACT_APP_WORKOUT_URL: ${WORKOUT_URL}
+    container_name: frontend
+    working_dir: /app
+    volumes:
+      - ${FRONTEND_ROOT}:/app
+    command: "sh -c 'yarn && yarn run build'"
