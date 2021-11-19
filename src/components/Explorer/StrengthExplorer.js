@@ -9,7 +9,7 @@ import MovementSummary from 'components/Common/MovementSummary/MovementSummary'
 
 function StrengthExplorer(props) {
 
-  const user = useContext(AuthContext)
+  const {user} = useContext(AuthContext)
   const token = user.token
   const { data:movementClassData,
           error:movementClassDataError,

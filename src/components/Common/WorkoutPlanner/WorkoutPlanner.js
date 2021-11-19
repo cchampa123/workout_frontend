@@ -22,7 +22,7 @@ import {
 
 function WorkoutPlanner(props) {
 
-  const user = useContext(AuthContext)
+  const {user} = useContext(AuthContext)
   const [form, setForm] = useState(props.workout)
   const [showConfirmation, setShowConfirmation] = useState(false)
   const [loading, setLoading] = useState(true)

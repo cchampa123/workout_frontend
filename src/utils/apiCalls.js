@@ -8,7 +8,7 @@ export async function getData(key, token, parameters) {
   const workouts = await axios.get(API_URL+key,
     {
       headers: {
-        'Authorization': `Token ${token}`
+        'Authorization': `Bearer ${token}`
       },
       params: parameters
     }
@@ -22,7 +22,7 @@ export function sendData(key, token, data) {
       axios.put(
         API_URL + key + data[workout_workout_id] + '/',
         {...data, [date_planned]:moment(data[date_planned]).format('YYYY-MM-DD')},
-        {headers:{'Authorization':`Token ${token}`}}
+        {headers:{'Authorization':`Bearer ${token}`}}
       )
     )
   } else {
@@ -30,19 +30,19 @@ export function sendData(key, token, data) {
       axios.post(
         API_URL + key,
         {...data, [date_planned]:moment(data[date_planned]).format('YYYY-MM-DD')},
-        {headers:{'Authorization':`Token ${token}`}}
+        {headers:{'Authorization':`Bearer ${token}`}}
       )
     )
   }
 }
 
 export async function updateData(key, token, data) {
-  const response = await axios.put(API_URL+key, data, {headers:{'Authorization':`Token ${token}`}})
+  const response = await axios.put(API_URL+key, data, {headers:{'Authorization':`Bearer ${token}`}})
   return response.data
 }
 
 export async function getMovementClasses(key, token) {
-  const movementClasses = await axios.get(API_URL+key, {headers:{'Authorization':`Token ${token}`}})
+  const movementClasses = await axios.get(API_URL+key, {headers:{'Authorization':`Bearer ${token}`}})
   return movementClasses.data
 }
 
@@ -50,7 +50,7 @@ export async function getFilteredMovementClasses(token, query) {
   try {
     const options = await axios.get(API_URL+'movement_class/', {
       headers:{
-        'Authorization':`Token ${token}`
+        'Authorization':`Bearer ${token}`
       },
       params:{
         'name__icontains':query
@@ -67,7 +67,7 @@ export async function addNewMovementClass(token, data) {
   try {
     const newMovementClass = await axios.post(API_URL+'movement_class/', data,
     {headers:{
-        'Authorization': `Token ${token}`
+        'Authorization': `Bearer ${token}`
       }
     })
     return newMovementClass.data

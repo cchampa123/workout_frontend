@@ -19,7 +19,7 @@ function MovementClassSummary(props) {
   const [open, setOpen] = useState(false)
   const [form, setForm] = useState({})
   useEffect(() => setForm(movement), [movement])
-  const user = useContext(AuthContext)
+  const {user} = useContext(AuthContext)
 
   const handleSubmit = async () => {
     props.mutate(form, false)

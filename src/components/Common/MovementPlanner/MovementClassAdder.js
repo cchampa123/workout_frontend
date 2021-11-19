@@ -18,7 +18,7 @@ function MovementClassAdder(props) {
   const [form, setForm] = useState(props.newMovement[0])
   const [error, setError] = useState({})
 
-  const {token} = useContext(AuthContext)
+  const {user} = useContext(AuthContext)
 
   const updateForm = (field, value) => {
     setForm({
@@ -48,7 +48,7 @@ function MovementClassAdder(props) {
     } else {
       setError(errors)
       const { customOption, ...rest } = form
-      const newMovement = await addNewMovementClass(token, rest)
+      const newMovement = await addNewMovementClass(user.token, rest)
       props.setMovementClassData([newMovement].concat(props.movementClassData))
       props.updateMovement([newMovement])
       props.setNewMovement({})

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Form from 'react-bootstrap/Form'
@@ -6,78 +6,82 @@ import Button from 'react-bootstrap/Button'
 import Spinner from 'react-bootstrap/Spinner'
 import image from '../img/open_logo.png'
 import axios from 'axios'
-import { API_URL } from 'constants/configs'
+import { usePersistedState } from 'utils/stateHandlers'
+import jwt_decode from 'jwt-decode'
+import { AUTH_URL, CLIENT_ID } from 'constants/configs'
+import {AuthContext} from 'contexts/AuthContext'
+import getPkce from 'oauth-pkce'
 
 function UnauthenticatedApp(props) {
 
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
-  const [loading, setLoading] = useState(false)
-
-  async function submitCreds() {
-    setLoading(true)
-    let response
-    try {
-      response = await axios.post(API_URL+'login/', {
-        email:email,
-        password:password
-      })
-      props.setUser(response.data)
-    }
-    catch (error) {
-      setError(error.response.data)
+  const {setUser} = useContext(AuthContext)
+  const [ loading, setLoading ] = useState(true)
+  const [ pkce, setPkce ] = useState({})
+  const [ code, setCode ] = useState('')
+  const [ authData, setAuthData ] = useState({})
+  useEffect(() => {
+    if (localStorage.getItem('pkce')===null) {
+      getPkce(50, (error, { verifier, challenge }) => {
+        setPkce({ verifier, challenge });
+        localStorage.setItem('pkce', JSON.stringify({verifier, challenge}))
+    })}
+    else {
+      setPkce(JSON.parse(localStorage.getItem('pkce')))
+      localStorage.removeItem('pkce')
+    };
+    const params = new URLSearchParams(window.location.search)
+    const authCode = params.get('code')
+    if (authCode) {
+      setCode(authCode)
+    } else {
       setLoading(false)
     }
-  }
+  }, []);
 
-  const loginForm = (
-    <Form>
-      <Row className='my-2'>
-        <Form.Group>
-          <Form.Control
-            placeholder='Email'
-            type='email'
-            style={{textAlign: "center",
-                    fontWeight: "bold"}}
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            isInvalid={!!error.email}
-          />
-          <Form.Control.Feedback type='invalid'>{error.email}</Form.Control.Feedback>
-        </Form.Group>
-      </Row>
-      <Row className='my-2'>
-        <Form.Group>
-          <Form.Control
-            placeholder='Password'
-            type='password'
-            style={{textAlign: "center",
-                    fontWeight: "bold"}}
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            isInvalid={!!error.password}
-          />
-          <Form.Control.Feedback type='invalid'>{error.password}</Form.Control.Feedback>
-        </Form.Group>
-      </Row>
-      <Row className='my-2'>
-        <Form.Group>
-          <Button
-            className='btn btn-dark col-12'
-            style={{fontWeight:"bold"}}
-            onClick={() => submitCreds()}
-          >
-            Log In
-          </Button>
-        </Form.Group>
-      </Row>
-      {error.non_field_errors ?
-        <h5 className='text-red text-center'>{error.non_field_errors}</h5>:
-        <div/>
+  useEffect(() => {
+    async function getAuthData() {
+      try {
+        const response = await axios.post(
+          `${AUTH_URL}/token/`,
+          `client_id=${CLIENT_ID}&code_verifier=${pkce.verifier}&grant_type=authorization_code&code=${code}`,
+          {headers:{
+            'Content-Type':'application/x-www-form-urlencoded'
+          }}
+        )
+        setCode('')
+        setPkce({})
+        setAuthData(response.data)
+      } catch (error) {
+        setCode('')
+        setLoading(false)
+        //return error
       }
-    </Form>
-  )
+    }
+    if (code) {
+      getAuthData()
+      console.log(code)
+    }
+  }, [code, pkce.verifier])
+
+  useEffect(() => {
+    if (authData['id_token']) {
+      setUser({
+        user:jwt_decode(authData['id_token']), token:authData['access_token'],
+        expires_in:authData['expires_in'],
+        refresh_token:authData['refresh_token']
+      })
+    }
+  }, [authData])
+
+  const oauth_url = `${AUTH_URL}/authorize?
+nonce=${Math.random().toString(36).substring(2,10)}
+&code_challenge=${pkce.challenge}
+&code_challenge_method=S256
+&response_type=code
+&scope=openid
+&client_id=${CLIENT_ID}`
+  const params = new URLSearchParams(window.location.search)
+  const state = params.get('state')
 
   return (
     <Container>
@@ -86,7 +90,7 @@ function UnauthenticatedApp(props) {
       <br/>
       <h1 style={{textAlign: "center", fontWeight:"bold"}}>WhoopiePie</h1>
       <br/>
-      {loading ? <div className='text-center'><Spinner animation='border'/></div> : loginForm}
+      {loading?<div className='text-center'><Spinner animation='border'/></div>:<Button className='col-12 btn-dark' href={oauth_url}>Log In</Button>}
     </Container>
   );
 }

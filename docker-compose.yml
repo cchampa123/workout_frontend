@@ -4,6 +4,8 @@ services:
     image: node:15.8.0
     environment:
       REACT_APP_WORKOUT_URL: ${WORKOUT_URL}
+      REACT_APP_AUTH_URL: ${AUTH_URL}
+      REACT_APP_CLIENT_ID: ${CLIENT_ID}
     container_name: frontend
     working_dir: /app
     volumes:

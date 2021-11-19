@@ -8,7 +8,7 @@ import moment from 'moment'
 
 function Home() {
 
-  const user = useContext(AuthContext)
+  const {user} = useContext(AuthContext)
   const { workoutData } = useContext(WorkoutDataContext)
 
   const todayWorkouts = workoutData.filter(x=>

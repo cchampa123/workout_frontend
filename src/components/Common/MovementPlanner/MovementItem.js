@@ -22,7 +22,7 @@ function MovementItem(props) {
 
   const [newMovement, setNewMovement] = useState({})
   const [loading, setLoading] = useState(false)
-  const {token} = useContext(AuthContext)
+  const {user} = useContext(AuthContext)
   const { movementClassData, setMovementClassData } = useContext(MovementClassContext)
   const selectedMovement=movementClassData.filter(x =>
     x[class_id]===props.movement[instance_class_id]
@@ -41,7 +41,7 @@ function MovementItem(props) {
 
   const handleSearch = useCallback(async (query) => {
     setLoading(true)
-    const searchedMovement = await getFilteredMovementClasses(token, query)
+    const searchedMovement = await getFilteredMovementClasses(user.token, query)
     const newMovements = searchedMovement.filter(x=>
       !movementClassData.map(
         y=>y.name.toLowerCase()

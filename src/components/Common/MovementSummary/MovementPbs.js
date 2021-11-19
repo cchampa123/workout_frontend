@@ -11,7 +11,7 @@ import Col from 'react-bootstrap/Col'
 
 function MovementPbs(props) {
 
-  const user = useContext(AuthContext)
+  const {user} = useContext(AuthContext)
   const {data:pbs, error:pbsError} = useSWR(
     [`movement_class/${props.movement[name]}/max_score/`, user.token],
     (key, token) => getData(key, token)

@@ -16,7 +16,7 @@ function MovementHistory(props) {
   const movementName = props.movement[name]
   useEffect(()=>{setSelectedCount({})}, [movementName])
 
-  const user = useContext(AuthContext)
+  const {user} = useContext(AuthContext)
   const {data:countOptions, error:countOptionsError} = useSWR(
     [`movement_class/${props.movement[name]}/unique_counts/`, user.token],
     (key, token) => getData(key, token, {})

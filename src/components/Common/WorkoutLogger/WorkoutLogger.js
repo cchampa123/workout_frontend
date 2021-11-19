@@ -21,7 +21,7 @@ import { AuthContext } from 'contexts/AuthContext'
 
 function WorkoutLogger(props) {
 
-  const user = useContext(AuthContext)
+  const {user} = useContext(AuthContext)
   const [form, setForm] = useState(props.workoutData)
   const [activeSection, setActiveSection] = useState(0)
   const [submitted, setSubmitted] = useState(false)
@@ -44,7 +44,7 @@ function WorkoutLogger(props) {
       setActiveSection(newSection)
     }
   }
-  
+
   const updatedSectionData = (newData) => {
     const newSectionData = []
     let iterator = 0
