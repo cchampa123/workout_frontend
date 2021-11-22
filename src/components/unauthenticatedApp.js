@@ -11,6 +11,7 @@ import jwt_decode from 'jwt-decode'
 import { AUTH_URL, CLIENT_ID } from 'constants/configs'
 import {AuthContext} from 'contexts/AuthContext'
 import getPkce from 'oauth-pkce'
+import crypto from 'crypto'
 
 function UnauthenticatedApp(props) {
 
@@ -19,12 +20,22 @@ function UnauthenticatedApp(props) {
   const [ pkce, setPkce ] = useState({})
   const [ code, setCode ] = useState('')
   const [ authData, setAuthData ] = useState({})
+  function base64URLEncode(str) {
+    return str.toString('base64')
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=/g, '');
+  }
+  function sha256(buffer) {
+    return crypto.createHash('sha256').update(buffer).digest();
+  }
   useEffect(() => {
     if (localStorage.getItem('pkce')===null) {
-      getPkce(50, (error, { verifier, challenge }) => {
+        const verifier = base64URLEncode(crypto.randomBytes(32));
+        const challenge = base64URLEncode(sha256(verifier));
         setPkce({ verifier, challenge });
         localStorage.setItem('pkce', JSON.stringify({verifier, challenge}))
-    })}
+    }
     else {
       setPkce(JSON.parse(localStorage.getItem('pkce')))
       localStorage.removeItem('pkce')
