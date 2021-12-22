@@ -8,6 +8,8 @@ services:
       REACT_APP_CLIENT_ID: ${CLIENT_ID}
     container_name: frontend
     working_dir: /app
+    ports:
+      - 3000:3000
     volumes:
       - ${FRONTEND_ROOT}:/app
-    command: "sh -c 'yarn && yarn run build'"
+    command: "sh -c 'yarn && yarn run start'"
