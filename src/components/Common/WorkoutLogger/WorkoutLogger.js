@@ -5,7 +5,8 @@ import Form from 'react-bootstrap/Form'
 import MovementLogForm from './MovementLogForm'
 import {
   movement_set,
-  order as section_order
+  order as section_order,
+  section_type
 } from 'constants/section'
 import {
   order as movement_order
@@ -89,6 +90,7 @@ function WorkoutLogger(props) {
           form[section_set][activeSection][movement_set].map(y=>
             <MovementLogForm
               key={y[movement_order]}
+              sectionType={form[section_set][activeSection][section_type]}
               errors={!!sectionErrors[relevantSection]?sectionErrors[relevantSection]:{}}
               movementData={y}
               setMovementData={movementData => setForm({

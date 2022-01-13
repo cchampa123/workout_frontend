@@ -9,7 +9,6 @@ import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 
 import {
-  id as movement_id,
   order as movement_order
 } from 'constants/movement'
 
@@ -25,7 +24,7 @@ import { createNewDefaultMovement } from 'utils/createDefaults'
 
 function SectionPlanner(props) {
 
-  const [addScore, setAddScore] = useState(false)
+  const [addScore, setAddScore] = useState(props.sectionData[score_number]||(props.sectionData[score_time]!=='00:00:00'))
   const sortedMovementData = (newData, movementToUpdate) => {
     const newMovementData = newData ?
       [...props.sectionData[movement_set].filter(
@@ -45,7 +44,6 @@ function SectionPlanner(props) {
 
   const sectionScoreInput = props.sectionData[round_type]!=='F'?
     <Form.Group>
-      <Form.Label>Score</Form.Label>
       <Form.Control
         type='input'
         value={props.sectionData[score_number]}
@@ -55,7 +53,6 @@ function SectionPlanner(props) {
     </Form.Group>
     :
     <>
-    Score
     <TimePicker
       scoreTime={props.sectionData[score_time]}
       onSelect={e=>props.setForm({...props.sectionData, [score_time]:e})}
@@ -109,7 +106,7 @@ function SectionPlanner(props) {
                 onClick={()=>setAddScore(!addScore)}
                 className='col-12'
               >
-                {!addScore?'Add Section Score':'Fill in Score Later'}
+                {!addScore?'Add Section Score':'Hide Score'}
               </Button>
               {addScore?sectionScoreInput:null}
             </Col>

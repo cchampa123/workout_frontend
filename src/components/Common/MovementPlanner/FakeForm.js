@@ -1,39 +1,54 @@
-import React from 'react'
+import React, {useState, useEffect } from 'react'
 import Button from 'react-bootstrap/Button'
 import { formatDataStrings } from 'utils/sectionStringFormatting'
 
 function FakeForm(props) {
 
-  let word
-  let number
+  const [word, setWord] = useState('')
+  const [number, setNumber] = useState('')
 
-  if(props.movementData[props.relevant_number_variable]!==null) {
-    if (props.movementData[props.relevant_type_variable] === 'time') {
-      if(props.movementData[props.relevant_number_variable]==='00:00:00') {
-        word=props.movementClass[props.relevant_defaults][0]
-        number=''
-      } else {
-        word = ''
-        const [hours, minutes, seconds] = props.movementData[props.relevant_number_variable].split(':')
-        if (hours==='00') {
-          number = Number(minutes).toString()+':'+seconds
+  useEffect(() => {
+    if(props.movementData[props.relevant_number_variable]!==null) {
+      if (props.movementData[props.relevant_type_variable] === 'time') {
+        if(props.movementData[props.relevant_number_variable]==='00:00:00') {
+          setWord(props.movementClass[props.relevant_defaults][0])
+          setNumber('')
         } else {
-          number = Number(hours).toString()+':'+minutes+':'+seconds
+          setWord('')
+          const [hours, minutes, seconds] = props.movementData[props.relevant_number_variable].split(':')
+          if (hours==='00') {
+            setNumber(Number(minutes).toString()+':'+seconds)
+          } else {
+            setNumber(Number(hours).toString()+':'+minutes+':'+seconds)
+          }
         }
+      } else {
+        setWord(props.movementData[props.relevant_type_variable])
+        setNumber(String(props.movementData[props.relevant_number_variable]))
       }
     } else {
-      word = props.movementData[props.relevant_type_variable]
-      number = String(props.movementData[props.relevant_number_variable])
+      setWord(props.movementData[props.relevant_type_variable])
+      setNumber('')
     }
-  } else {
-    word = props.movementClass[props.relevant_defaults][0]
-    number = ''
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    props.movementData[props.relevant_number_variable],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    props.movementData[props.relevant_type_variable],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    props.relevant_type_variable,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    props.relevant_number_variable,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    props.movementData['count_type'],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    props.movementData['score_type']
+  ])
 
   return (
     <Button
       className='btn btn-info col-12 text-dark'
-      disabled={props.movementData[props.relevant_type_variable]==='completion'}
       style={{textTransform:'capitalize'}}
       onClick={()=>props.setShow(true)}>
         {number.concat(" ", word!==''?formatDataStrings(word):'')}

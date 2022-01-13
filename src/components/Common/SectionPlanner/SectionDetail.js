@@ -13,6 +13,8 @@ import {
   round_types,
   round_duration,
   section_type,
+  score_number,
+  score_time,
   section_types,
   extra_instructions
 } from 'constants/section'
@@ -27,16 +29,20 @@ function SectionDetail(props) {
         ...props.form,
         round_type:value,
       })
-    } else if (field === section_type && value==='S') {
+    } else if (field === section_type && value!=='M') {
       props.setForm({
         ...props.form,
         section_type:value,
-        rounds:'',
-        round_type:''
+        score_number:null,
+        score_time:'00:00:00',
+        rounds:1,
+        round_type:'F'
       })
-    } else if (props.form[section_type]==='S' && field===section_type && value!=='S') {
+    } else if (props.form[section_type]!=='M' && field===section_type && value!=='S') {
       props.setForm({
         ...props.form,
+        score_number:null,
+        score_time:'00:00:00',
         section_type:value,
         round_type:round_types[0]
       })
@@ -84,7 +90,7 @@ function SectionDetail(props) {
             }
           </Form.Control>
         </Form.Group>
-        {props.form[section_type]!=='S' ?
+        {props.form[section_type]==='M' ?
         <div>
           <Form.Group>
             <Form.Label>Rounds</Form.Label>

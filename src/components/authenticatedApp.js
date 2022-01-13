@@ -38,7 +38,6 @@ function AuthenticatedApp(props) {
       const originalRequest = error.config;
       if (error.response.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
-        console.log(user.refresh_token)
         const newData = await axios.post(`${AUTH_URL}/token/`,
           `refresh_token=${user.refresh_token}&grant_type=refresh_token&client_id=${CLIENT_ID}`,
           {headers:{
@@ -56,6 +55,7 @@ function AuthenticatedApp(props) {
     return () => {
       axios.interceptors.response.eject(responseInterceptor)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [AUTH_URL, CLIENT_ID, user.access_token, user.refresh_token])
 
   const dataValue = { workoutData:data, error, mutate };

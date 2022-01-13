@@ -5,7 +5,7 @@ import {
   count_type,
   count
 } from 'constants/movement'
-import { movement_set } from 'constants/section'
+import { movement_set, score_number, score_time } from 'constants/section'
 
 function SectionSummary(props) {
 
@@ -49,6 +49,16 @@ function SectionSummary(props) {
     )
   }
 
+  const score = () => {
+    if (props.sectionData[score_number]) {
+      return <div><i>Score:</i> {props.sectionData[score_number]} Reps</div>
+    } else if (props.sectionData[score_time]!=='00:00:00') {
+      return <div><i>Score:</i> {props.sectionData[score_time]}</div>
+    } else {
+      return null
+    }
+  }
+
 
   return (
     <div className='mb-2'>
@@ -63,6 +73,9 @@ function SectionSummary(props) {
           </div>
         )
         })
+      }
+      {
+        score()
       }
     </div>
   )

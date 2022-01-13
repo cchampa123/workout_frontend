@@ -95,6 +95,7 @@ function MovementItem(props) {
         <Col>
           <MovementMetricPicker
             count
+            sectionType={props.sectionType}
             movementClass={selectedMovement}
             movementData={props.movement}
             setMovementData={props.setForm}
@@ -102,6 +103,7 @@ function MovementItem(props) {
         </Col>
         <Col>
           <MovementMetricPicker
+            sectionType={props.sectionType}
             movementClass={selectedMovement}
             movementData={props.movement}
             setMovementData={props.setForm}

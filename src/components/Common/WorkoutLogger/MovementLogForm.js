@@ -40,8 +40,8 @@ function MovementLogForm(props) {
   const changeTime = (
       <Modal.Body>
         <TimePicker
-          scoreTime={props.movementData[score_number]}
-          onSelect={e=>props.setMovementData({...props.movementData, [score_number]:e})}
+          scoreTime={props.movementData[score_time]}
+          onSelect={e=>props.setMovementData({...props.movementData, [score_time]:e})}
         />
       </Modal.Body>
     )
@@ -77,7 +77,7 @@ function MovementLogForm(props) {
         </Form.Group>
       </Col>
       <Col className='col-3 m-0'>
-        <Button className={'col-12'+(!!errors[count]?' border border-red':'')} onClick={()=>setShow(true)}>
+        <Button disabled={props.sectionType==='C'} className={'col-12'+(!!errors[count]?' border border-red':'')} onClick={()=>setShow(true)}>
           {buttonText()}
         </Button>
       </Col>

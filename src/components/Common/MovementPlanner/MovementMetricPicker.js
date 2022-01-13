@@ -10,6 +10,7 @@ function MovementMetricPicker(props) {
   } else {
     return(
       <MovementMetricPickerMovementChosen
+        sectionType={props.sectionType}
         movementClass={props.movementClass[0]}
         movementData={props.movementData}
         count={props.count}

@@ -1,16 +1,12 @@
 import React, {useState, useEffect, useContext} from 'react';
 import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Spinner from 'react-bootstrap/Spinner'
 import image from '../img/open_logo.png'
 import axios from 'axios'
-import { usePersistedState } from 'utils/stateHandlers'
 import jwt_decode from 'jwt-decode'
 import { AUTH_URL, CLIENT_ID } from 'constants/configs'
 import {AuthContext} from 'contexts/AuthContext'
-import getPkce from 'oauth-pkce'
 import crypto from 'crypto'
 
 function UnauthenticatedApp(props) {
@@ -82,6 +78,7 @@ function UnauthenticatedApp(props) {
         refresh_token:authData['refresh_token']
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authData])
 
   const oauth_url = `${AUTH_URL}/authorize?
@@ -91,8 +88,6 @@ nonce=${Math.random().toString(36).substring(2,10)}
 &response_type=code
 &scope=openid
 &client_id=${CLIENT_ID}`
-  const params = new URLSearchParams(window.location.search)
-  const state = params.get('state')
 
   return (
     <Container>

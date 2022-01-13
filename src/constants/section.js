@@ -1,4 +1,4 @@
-export const section_types = ['S', 'M']
+export const section_types = ['S', 'M', 'C']
 export const round_types = ['F', 'A', 'E']
 export const id = 'id'
 export const workout_id = 'workout_id'

@@ -22,6 +22,7 @@ const mapping = {
   'E':'EMOM',
   'S':'Strength',
   'M':'MetCon',
+  'C':'Conditioning',
   'reps':'Reps',
   'miles':'Miles',
   'meters':'Meters',
@@ -142,7 +143,7 @@ export function sectionTitling(sectionData) {
     <>
       <h5 className='text-primary'>{formatDataStrings(sectionData[section_type])}</h5>
       {
-        sectionData[section_type]==='S'?<div/>:
+        sectionData[section_type]!=='M'?<div/>:
         <div>
           {sectionDetail}
         </div>

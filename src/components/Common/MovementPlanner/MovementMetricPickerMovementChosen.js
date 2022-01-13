@@ -38,6 +38,13 @@ function MovementMetricPickerMovementChosen(props) {
           [score_number]:null,
           [field]:value
         })
+      } else if (value === 'completion') {
+        props.setMovementData({
+          ...props.movementData,
+          [score_number]:null,
+          [score_time]:"00:00:00",
+          [field]:value
+        })
       } else {
         props.setMovementData({
           ...props.movementData,
@@ -56,6 +63,7 @@ function MovementMetricPickerMovementChosen(props) {
   return(
     <div>
       <FakeForm
+        sectionType={props.sectionType}
         relevant_number_variable={relevant_number_variable}
         relevant_type_variable={relevant_type_variable}
         relevant_defaults={relevant_defaults}
@@ -93,21 +101,25 @@ function MovementMetricPickerMovementChosen(props) {
             </Dropdown.Menu>
           </Dropdown>
         </Modal.Header>
-        <Modal.Body>
-          {
-            relevant_number_variable===score_time ?
-            <TimePicker
-              scoreTime={props.movementData[relevant_number_variable]}
-              onSelect={(selected) => setField(relevant_number_variable, selected)}
-            /> :
-            <Form.Control
-              type='number'
-              placeholder='Enter value'
-              value={props.movementData[relevant_number_variable]}
-              onChange={(e) => setField(relevant_number_variable, e.target.value)}
-            />
-          }
-        </Modal.Body>
+        {props.movementData[relevant_type_variable]!=='completion'?
+          <Modal.Body>
+            {
+              relevant_number_variable===score_time ?
+              <TimePicker
+                scoreTime={props.movementData[relevant_number_variable]}
+                onSelect={(selected) => setField(relevant_number_variable, selected)}
+              /> :
+              <Form.Control
+                type='number'
+                placeholder='Enter value'
+                value={props.movementData[relevant_number_variable]}
+                onChange={(e) => setField(relevant_number_variable, e.target.value)}
+              />
+            }
+          </Modal.Body>
+          :
+          null
+        }
         <Modal.Footer>
           <Button
             className='col-12'
